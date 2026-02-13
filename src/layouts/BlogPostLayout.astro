@@ -43,25 +43,39 @@ const formattedUpdate = updatedDate?.toLocaleDateString(lang, {
 
 <BaseLayout title={`${title} — Prompt Lúcido`} description={description} lang={lang}>
 	<article class="post container--narrow">
-		{image && (
-			<picture class="post__cover">
-				{image.mobileSrc && (
-					<source media="(max-width: 768px)" srcset={image.mobileSrc} />
+		{image ? (
+			<div class="post-hero">
+				<picture>
+					{image.mobileSrc && (
+						<source media="(max-width: 768px)" srcset={image.mobileSrc} />
+					)}
+					<img src={image.src} alt={image.alt} />
+				</picture>
+				<header class="post-hero__header">
+					{category && <span class="tag">{category}</span>}
+					<h1 class="post__title">{title}</h1>
+					<p class="post__meta">
+						<time datetime={pubDate.toISOString()}>{formattedDate}</time>
+						{readingTime && <span>&middot; {readingTime} {t('post.readingTime', lang as Lang)}</span>}
+					</p>
+					{updatedDate && (
+						<p class="post__updated">{t('post.updated', lang as Lang)} {formattedUpdate}</p>
+					)}
+				</header>
+			</div>
+		) : (
+			<header class="post__header">
+				{category && <span class="tag">{category}</span>}
+				<h1 class="post__title">{title}</h1>
+				<p class="post__meta">
+					<time datetime={pubDate.toISOString()}>{formattedDate}</time>
+					{readingTime && <span>&middot; {readingTime} {t('post.readingTime', lang as Lang)}</span>}
+				</p>
+				{updatedDate && (
+					<p class="post__updated">{t('post.updated', lang as Lang)} {formattedUpdate}</p>
 				)}
-				<img src={image.src} alt={image.alt} />
-			</picture>
+			</header>
 		)}
-		<header class="post__header">
-			{category && <span class="tag">{category}</span>}
-			<h1 class="post__title">{title}</h1>
-			<p class="post__meta">
-				<time datetime={pubDate.toISOString()}>{formattedDate}</time>
-				{readingTime && <span>&middot; {readingTime} {t('post.readingTime', lang as Lang)}</span>}
-			</p>
-			{updatedDate && (
-				<p class="post__updated">{t('post.updated', lang as Lang)} {formattedUpdate}</p>
-			)}
-		</header>
 
 		<div class="prose">
 			<slot />
@@ -79,26 +93,57 @@ const formattedUpdate = updatedDate?.toLocaleDateString(lang, {
 
 <style>
 	.post {
-		padding-top: 3rem;
+		padding-top: 0;
 		padding-bottom: 4rem;
 	}
 
-	.post__cover {
-		display: block;
-		width: 100%;
-		margin-bottom: 2rem;
+	/* --- Hero: image + overlaid header --- */
+
+	.post-hero {
+		position: relative;
+		max-height: 350px;
+		overflow: hidden;
+		border-radius: 12px;
+		margin-bottom: 2.5rem;
 	}
 
-	.post__cover img {
+	.post-hero img {
+		display: block;
 		width: 100%;
-		border-radius: 12px;
+		height: 350px;
+		object-fit: cover;
 	}
+
+	.post-hero::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 70%;
+		background: linear-gradient(to bottom, transparent 0%, #FAF9F6 100%);
+		pointer-events: none;
+		z-index: 1;
+	}
+
+	.post-hero__header {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 2rem;
+		z-index: 2;
+	}
+
+	/* --- Fallback header (no image) --- */
 
 	.post__header {
 		margin-bottom: 2.5rem;
 		padding-bottom: 2rem;
 		border-bottom: 1px solid var(--border);
 	}
+
+	/* --- Shared text styles --- */
 
 	.post__title {
 		font-family: var(--font-heading);
@@ -107,13 +152,13 @@ const formattedUpdate = updatedDate?.toLocaleDateString(lang, {
 		line-height: 1.15;
 		letter-spacing: -0.02em;
 		margin-top: 0.75rem;
-		color: var(--text);
+		color: #1A1A19;
 	}
 
 	.post__meta {
 		font-family: var(--font-ui);
 		font-size: 0.95rem;
-		color: var(--text-muted);
+		color: #6B6B63;
 		margin-top: 1rem;
 		display: flex;
 		gap: 0.5rem;
@@ -123,7 +168,7 @@ const formattedUpdate = updatedDate?.toLocaleDateString(lang, {
 	.post__updated {
 		font-family: var(--font-ui);
 		font-size: 0.875rem;
-		color: var(--text-muted);
+		color: #6B6B63;
 		margin-top: 0.25rem;
 		font-style: italic;
 	}
@@ -139,8 +184,19 @@ const formattedUpdate = updatedDate?.toLocaleDateString(lang, {
 
 	@media (max-width: 768px) {
 		.post {
-			padding-top: 2rem;
 			padding-bottom: 3rem;
+		}
+
+		.post-hero {
+			max-height: 250px;
+		}
+
+		.post-hero img {
+			height: 250px;
+		}
+
+		.post-hero__header {
+			padding: 1.25rem;
 		}
 
 		.post__header {
