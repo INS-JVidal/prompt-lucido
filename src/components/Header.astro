@@ -1,15 +1,16 @@
 ---
+const base = import.meta.env.BASE_URL;
 const currentPath = Astro.url.pathname;
 
 const links = [
-	{ href: '/', label: 'Inicio' },
-	{ href: '/blog', label: 'Blog' },
+	{ href: base, label: 'Inicio' },
+	{ href: `${base}blog`, label: 'Blog' },
 ];
 ---
 
 <header class="site-header">
 	<div class="site-header__inner container">
-		<a href="/" class="site-header__logo">
+		<a href={import.meta.env.BASE_URL} class="site-header__logo">
 			Prompt L<span class="site-header__accent">ú</span>cido
 		</a>
 		<nav class="site-header__nav" aria-label="Principal">
