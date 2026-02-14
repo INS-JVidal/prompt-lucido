@@ -11,7 +11,7 @@ lang: "es"
 image:
   src: "/images/blog/greenfield-vs-brownfield.svg"
   mobileSrc: "/images/blog/greenfield-vs-brownfield-mobile.svg"
-  alt: "Dos desarrolladores frente a proyectos completamente distintos"
+  alt: ""
 readingTime: 8
 translationId: "mistake-before-first-prompt"
 ---
