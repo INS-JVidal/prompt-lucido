@@ -1,6 +1,13 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 import { t, type Lang } from '../i18n/utils';
+
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
 
 interface Props {
 	title: string;
@@ -14,6 +21,7 @@ interface Props {
 	lang?: string;
 	image?: { src: string; mobileSrc?: string; alt: string };
 	translationUrl?: string;
+	headings?: Heading[];
 }
 
 const {
@@ -28,6 +36,7 @@ const {
 	lang = 'es',
 	image,
 	translationUrl,
+	headings = [],
 } = Astro.props;
 
 const formattedDate = pubDate.toLocaleDateString(lang, {
@@ -41,10 +50,12 @@ const formattedUpdate = updatedDate?.toLocaleDateString(lang, {
 	month: 'long',
 	day: 'numeric',
 });
+
+const hasH2 = headings.some((h) => h.depth === 2);
 ---
 
 <BaseLayout title={`${title} — Prompt Lúcido`} description={description} lang={lang} translationUrl={translationUrl}>
-	<article class="post container--narrow">
+	<div class:list={['post-wrapper', hasH2 && 'post-wrapper--with-toc']}>
 		{image ? (
 			<div class="post-hero">
 				<picture>
@@ -79,24 +90,92 @@ const formattedUpdate = updatedDate?.toLocaleDateString(lang, {
 			</header>
 		)}
 
-		<div class="prose">
-			<slot />
-		</div>
-
-		{tags.length > 0 && (
-			<footer class="post__tags">
-				{tags.map((t) => (
-					<span class="tag">{t}</span>
-				))}
-			</footer>
+		{hasH2 && (
+			<div class="post__toc-mobile">
+				<TableOfContents headings={headings} lang={lang} variant="mobile" />
+			</div>
 		)}
-	</article>
+
+		<article class:list={['post', hasH2 ? 'post--with-toc' : 'container--narrow']}>
+			<div class="post__body">
+				<div class="prose">
+					<slot />
+				</div>
+
+				{tags.length > 0 && (
+					<footer class="post__tags">
+						{tags.map((t) => (
+							<span class="tag">{t}</span>
+						))}
+					</footer>
+				)}
+			</div>
+
+			{hasH2 && (
+				<aside class="post__toc-sidebar">
+					<TableOfContents headings={headings} lang={lang} variant="sidebar" />
+				</aside>
+			)}
+		</article>
+	</div>
 </BaseLayout>
 
 <style>
+	/* --- Wrapper: contains hero, mobile TOC, and article --- */
+
+	.post-wrapper {
+		max-width: var(--content-width);
+		margin: 0 auto;
+		padding: 0 var(--gap);
+	}
+
+	.post-wrapper--with-toc {
+		max-width: calc(var(--page-width) + 200px + 3rem);
+	}
+
+	/* --- Mobile TOC: sticky below header --- */
+
+	.post__toc-mobile {
+		position: sticky;
+		top: 3.5rem;
+		z-index: 50;
+		background: var(--bg);
+	}
+
+	@media (min-width: 900px) {
+		.post__toc-mobile {
+			display: none;
+		}
+	}
+
+	/* --- Article: two-column layout with TOC --- */
+
 	.post {
 		padding-top: 0;
 		padding-bottom: 4rem;
+	}
+
+	.post--with-toc {
+		display: flex;
+		align-items: stretch;
+		gap: 0 3rem;
+	}
+
+	.post__body {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.post__toc-sidebar {
+		display: none;
+	}
+
+	@media (min-width: 900px) {
+		.post__toc-sidebar {
+			display: block;
+			flex: 0 0 200px;
+			position: relative;
+		}
 	}
 
 	/* --- Hero: image + overlaid header (CSS Grid stack) --- */

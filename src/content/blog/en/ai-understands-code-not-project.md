@@ -16,8 +16,6 @@ readingTime: 8
 translationId: "ai-understands-code-not-project"
 ---
 
-# AI Understands Your Code. It Doesn't Understand Your Project.
-
 You've got a bug in production. An endpoint returns inconsistent data, but only when two users edit the same resource within a three-second window. You paste the controller code into Claude, describe the problem, and in under a minute you get a detailed response: the model identifies the race condition, explains why it happens, and proposes an optimistic locking solution that is technically flawless.
 
 Except that endpoint shouldn't exist. It was created eight months ago as a temporary workaround because the product team needed a demo for a client who never signed. The real permissions system was designed afterward and makes it redundant. The correct fix isn't to solve the race condition — it's to remove the endpoint and redirect calls to the flow that already works. But the AI doesn't know that, because none of it is in the code.

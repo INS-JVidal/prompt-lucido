@@ -1,0 +1,189 @@
+---
+import { t, type Lang } from '../i18n/utils';
+
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
+interface Props {
+	headings: Heading[];
+	lang?: string;
+	variant: 'sidebar' | 'mobile';
+}
+
+const { headings, lang = 'es', variant } = Astro.props;
+const tocHeadings = headings.filter((h) => h.depth === 2);
+---
+
+{tocHeadings.length > 0 && variant === 'sidebar' && (
+	<nav class="toc-sidebar" aria-label={t('toc.ariaLabel', lang as Lang)}>
+		<p class="toc__heading">{t('toc.title', lang as Lang)}</p>
+		<ul class="toc__list">
+			{tocHeadings.map((h) => (
+				<li>
+					<a href={`#${h.slug}`} class="toc__link" data-slug={h.slug}>
+						{h.text}
+					</a>
+				</li>
+			))}
+		</ul>
+	</nav>
+)}
+
+{tocHeadings.length > 0 && variant === 'mobile' && (
+	<details class="toc-mobile">
+		<summary class="toc-mobile__toggle">
+			{t('toc.mobileTitle', lang as Lang)}
+			<span class="toc-mobile__chevron" aria-hidden="true">▾</span>
+		</summary>
+		<ul class="toc__list">
+			{tocHeadings.map((h) => (
+				<li>
+					<a href={`#${h.slug}`} class="toc__link" data-slug={h.slug}>
+						{h.text}
+					</a>
+				</li>
+			))}
+		</ul>
+	</details>
+)}
+
+<style>
+	/* ── Sidebar TOC ── */
+	.toc-sidebar {
+		position: sticky;
+		top: 2rem;
+		max-height: calc(100vh - 4rem);
+		overflow-y: auto;
+	}
+
+	.toc__heading {
+		font-family: var(--font-ui);
+		font-size: 0.7rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--text-muted);
+		margin-bottom: 0.75rem;
+	}
+
+	.toc__list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.toc__list li {
+		margin: 0;
+	}
+
+	.toc__link {
+		display: block;
+		font-family: var(--font-ui);
+		font-size: 0.8rem;
+		line-height: 1.4;
+		color: var(--text-muted);
+		text-decoration: none;
+		padding: 0.35rem 0 0.35rem 0.75rem;
+		border-left: 2px solid var(--border);
+		transition: color 0.15s, border-color 0.15s;
+	}
+
+	.toc__link:hover {
+		color: var(--text-secondary);
+	}
+
+	.toc__link.active {
+		color: var(--accent);
+		border-left-color: var(--accent);
+	}
+
+	/* ── Mobile TOC ── */
+	.toc-mobile {
+		margin-bottom: 2rem;
+		border: 1px solid var(--border);
+		border-radius: 8px;
+	}
+
+	.toc-mobile__toggle {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font-family: var(--font-ui);
+		font-size: 0.85rem;
+		font-weight: 500;
+		color: var(--text-secondary);
+		padding: 0.75rem 1rem;
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.toc-mobile__toggle::-webkit-details-marker {
+		display: none;
+	}
+
+	.toc-mobile__chevron {
+		transition: transform 0.2s;
+		font-size: 0.75rem;
+	}
+
+	.toc-mobile[open] .toc-mobile__chevron {
+		transform: rotate(180deg);
+	}
+
+	.toc-mobile .toc__list {
+		padding: 0 1rem 0.75rem;
+	}
+
+	.toc-mobile .toc__link {
+		font-size: 0.85rem;
+		padding: 0.3rem 0 0.3rem 0.75rem;
+	}
+</style>
+
+<script>
+	function initToc() {
+		const links = document.querySelectorAll<HTMLAnchorElement>('.toc__link');
+		if (links.length === 0) return;
+
+		const slugs = Array.from(new Set(Array.from(links).map((l) => l.dataset.slug!)));
+		const sections = slugs
+			.map((s) => document.getElementById(s))
+			.filter((el): el is HTMLElement => el !== null);
+
+		if (sections.length === 0) return;
+
+		let currentSlug = '';
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						currentSlug = entry.target.id;
+					}
+				}
+				links.forEach((link) => {
+					link.classList.toggle('active', link.dataset.slug === currentSlug);
+				});
+			},
+			{ rootMargin: '-80px 0px -60% 0px' },
+		);
+
+		sections.forEach((s) => observer.observe(s));
+
+		// Mobile: collapse on link click
+		const mobileDetails = document.querySelector<HTMLDetailsElement>('.toc-mobile');
+		if (mobileDetails) {
+			mobileDetails.querySelectorAll('.toc__link').forEach((link) => {
+				link.addEventListener('click', () => {
+					mobileDetails.open = false;
+				});
+			});
+		}
+	}
+
+	initToc();
+	document.addEventListener('astro:after-swap', initToc);
+</script>

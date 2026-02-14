@@ -16,8 +16,6 @@ readingTime: 8
 translationId: "ai-understands-code-not-project"
 ---
 
-# La IA entiende tu código. No entiende tu proyecto.
-
 Tienes un bug en producción. Un endpoint devuelve datos inconsistentes, pero solo cuando dos usuarios editan el mismo recurso en un intervalo de menos de tres segundos. Le pegas el código del controlador a Claude, le describes el problema, y en menos de un minuto tienes una respuesta detallada: el modelo identifica la race condition, te explica por qué ocurre, y te propone una solución con bloqueo optimista que es técnicamente impecable.
 
 Solo que ese endpoint no debería existir. Se creó hace ocho meses como workaround temporal porque el equipo de producto necesitaba una demo para un cliente que al final nunca firmó. El sistema de permisos real se diseñó después y lo hace redundante. La solución correcta no es arreglar la race condition — es eliminar el endpoint y redirigir las llamadas al flujo que ya funciona. Pero eso la IA no lo sabe, porque eso no está en el código.

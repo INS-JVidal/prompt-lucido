@@ -22,6 +22,9 @@ export const ui = {
 		'post.readingTime': 'min de lectura',
 		'post.updated': 'Actualizado el',
 		'footer.copy': 'Prompt Lúcido',
+		'toc.title': 'En este artículo',
+		'toc.mobileTitle': 'Contenido del artículo',
+		'toc.ariaLabel': 'Tabla de contenidos',
 	},
 	en: {
 		'site.title': 'Prompt Lúcido',
@@ -37,5 +40,8 @@ export const ui = {
 		'post.readingTime': 'min read',
 		'post.updated': 'Updated on',
 		'footer.copy': 'Prompt Lúcido',
+		'toc.title': 'In this article',
+		'toc.mobileTitle': 'Article contents',
+		'toc.ariaLabel': 'Table of contents',
 	},
 } as const;

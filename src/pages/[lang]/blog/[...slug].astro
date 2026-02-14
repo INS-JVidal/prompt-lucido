@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 
 const { post, allPosts } = Astro.props;
 const { lang } = Astro.params;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
 const otherLang = getOtherLang(lang as Lang);
 const translationUrl = getTranslatedPostUrl(post.data.translationId, otherLang, allPosts)
@@ -35,6 +35,7 @@ const translationUrl = getTranslatedPostUrl(post.data.translationId, otherLang, 
 	image={post.data.image}
 	lang={lang}
 	translationUrl={translationUrl}
+	headings={headings}
 >
 	<Content />
 </BlogPostLayout>
