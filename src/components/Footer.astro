@@ -1,5 +1,8 @@
 ---
+import { t, getLangFromUrl, type Lang } from '../i18n/utils';
+
 const year = new Date().getFullYear();
+const lang = getLangFromUrl(Astro.url) as Lang;
 ---
 
 <footer class="site-footer">
@@ -8,6 +11,7 @@ const year = new Date().getFullYear();
 			&copy; {year} Prompt Lúcido
 		</p>
 		<nav class="site-footer__links">
+			<a href={`/${lang}/aviso-legal`}>{t('nav.legal', lang)}</a>
 			<a href="https://youtube.com/@BeyondVibeCoding" target="_blank" rel="noopener">YouTube</a>
 		</nav>
 	</div>
