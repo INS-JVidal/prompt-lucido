@@ -1,8 +1,8 @@
 ---
 title: "La IA entiende tu código. No entiende tu proyecto."
 description: "Los modelos de IA resuelven el 80% de los problemas de benchmark, pero se desploman al 23% cuando el problema exige comprensión real. La diferencia entre ambos números es exactamente lo que tú aportas — y lo que nunca deberías delegar."
-pubDate: "2026-02-17"
-updatedDate: "2026-02-17"
+pubDate: "2026-02-16"
+updatedDate: "2026-02-16"
 author: "Prompt Lúcido"
 tags: ["ia", "desarrollo", "entender", "contexto", "ingeniería de software"]
 category: "las-cinco-actividades"
