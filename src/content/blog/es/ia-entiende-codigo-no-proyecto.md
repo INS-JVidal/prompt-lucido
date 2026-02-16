@@ -28,11 +28,11 @@ A principios de 2026, los modelos de IA resuelven más del 80% de los problemas 
 
 Pero en septiembre de 2025, Scale AI publicó SWE-Bench Pro, un benchmark diseñado para algo distinto: tareas de larga duración en repositorios con licencias copyleft y bases de código privadas de startups — tareas que a un ingeniero profesional le llevarían horas o días. Aquí los números cambian radicalmente: los mejores modelos, incluidos GPT-5 y Claude Opus 4.1, no superaron el 23% de resolución.
 
-Pero el dato que merece más atención no es ese. Es lo que pasó cuando los investigadores eliminaron las especificaciones escritas por humanos — los requisitos, las interfaces, la descripción del comportamiento esperado. GPT-5 cayó del 25.9% al 8.4%. El mismo modelo, el mismo código, el mismo problema. La única diferencia fue quitar el contexto humano. Y el rendimiento se desplomó a un tercio.
+Pero el dato que merece más atención no es ese. Es lo que pasó cuando los investigadores eliminaron las especificaciones escritas por humanos, es decir: los requisitos, las interfaces, la descripción del comportamiento esperado. GPT-5 cayó del 25.9% al 8.4%. El mismo modelo, el mismo código, el mismo problema. La única diferencia fue quitar el contexto humano. Y el rendimiento se desplomó a un tercio.
 
-Pero lo más revelador es el tipo de fallo. El análisis de trayectorias mostró que Claude Opus 4.1 falla principalmente por lo que el estudio llama "problemas de comprensión semántica" — soluciones técnicamente correctas al problema equivocado, que representaron el 35.9% de sus fallos. No es que el código tenga bugs. Es que resuelve lo que no se le pidió. Entiende sintaxis con precisión milimétrica. Entiende intención pobremente.
+Pero lo más revelador es el tipo de fallo. El análisis de trayectorias mostró que Claude Opus 4.1 falla principalmente por lo que el estudio llama "problemas de comprensión semántica", por ejemplo, soluciones técnicamente correctas al problema equivocado, que representaron el 35.9% de sus fallos. No es que el código tenga bugs. Es que resuelve lo que no se le pidió. Entiende sintaxis con precisión milimétrica. Entiende intención pobremente.
 
-Y esto es lo que no aparece en ninguna tabla de benchmark: el salto de 23% en SWE-Bench Pro a 80% en SWE-Bench Verified no refleja un salto en comprensión. Refleja que los problemas más fáciles no necesitan comprensión profunda — solo ejecución técnica limpia. Cuando el problema exige entender por qué el código es así y no de otra manera, los números se desploman.
+Y esto es lo que no aparece en ninguna tabla de benchmark: el salto de 23% en SWE-Bench Pro a 80% en SWE-Bench Verified no refleja un salto en comprensión. Refleja que los problemas más fáciles no necesitan comprensión profunda, en breve, solo ejecución técnica limpia. Cuando el problema exige entender por qué el código es así y no de otra manera, los números se desploman.
 
 ## El diccionario y el historiador
 
@@ -42,7 +42,7 @@ Pero hay otra capa que la IA no toca: la intención histórica. Por qué existe 
 
 La diferencia es la misma que hay entre un diccionario y un historiador. El diccionario te dice qué significa cada palabra. El historiador te dice por qué se escribió esa frase en ese momento. La IA es un diccionario extraordinariamente bueno. Pero tú necesitas un historiador.
 
-Esta distinción importa porque la actividad de entender — la primera y más importante de las cinco que exploramos en esta serie — no es "comprender el código". Es comprender por qué el código es así y no de otra manera. Y eso incluye comprender las cosas que no están escritas en ningún archivo.
+Esta distinción importa porque la actividad de entender no es "comprender el código". Es comprender el **por qué** de un código escrito así y no de otra manera. Y eso incluye comprender las cosas que no están escritas en ningún archivo.
 
 ## Dos mundos, dos problemas distintos
 
