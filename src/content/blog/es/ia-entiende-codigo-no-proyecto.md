@@ -72,9 +72,9 @@ El context rot inverso es especialmente peligroso en 2026 porque los modelos son
 
 Hay una regla práctica que puedes aplicar desde tu próxima sesión con IA. Antes de escribir un prompt, hazte una sola pregunta: **¿qué sabe la IA sobre esto y qué no puede saber?**
 
-En brownfield, la respuesta casi siempre es: sabe leer el código pero no sabe por qué es así. Tu trabajo antes del prompt es decidir qué contexto histórico necesita — y dárselo explícitamente. No todo. El contexto relevante para la tarea.
+En brownfield, la respuesta casi siempre es: sabe leer el código, pero no sabe por qué es así. Tu trabajo antes del prompt es decidir qué contexto histórico necesita — y dárselo explícitamente. No todo. El contexto relevante para la tarea.
 
-En greenfield, la respuesta es diferente: la IA sabe lo que es estándar pero no sabe lo que hace tu proyecto particular. Tu trabajo antes del prompt es definir las restricciones y peculiaridades — y asegurarte de que el modelo no converja hacia la solución genérica.
+En greenfield, la respuesta es diferente: la IA sabe lo que es estándar, pero no sabe lo que hace tu proyecto particular. Tu trabajo antes del prompt es definir las restricciones y peculiaridades — y asegurarte de que el modelo no converja hacia la solución genérica.
 
 En ambos casos, "entender" no es algo que delegas. Es algo que haces antes de delegar cualquier otra cosa.
 
