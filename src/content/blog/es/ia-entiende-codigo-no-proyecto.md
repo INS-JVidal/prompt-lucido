@@ -24,7 +24,7 @@ Solo que ese endpoint no debería existir. Se creó hace ocho meses como workaro
 
 ## Lo que falla no es la capacidad, es la comprensión
 
-A principios de 2026, los modelos de IA resuelven más del 80% de los problemas de SWE-Bench Verified — la referencia clásica de ingeniería de software. Claude Opus 4.5 lidera esa tabla. Parece que la IA ya programa casi tan bien como un ingeniero senior.
+A principios de 2026, los modelos de IA resuelven más del 80% de los problemas de SWE-Bench Verified. Claude Opus 4.5 lidera esa tabla. Parece que la IA ya programa casi tan bien como un ingeniero senior.
 
 Pero en septiembre de 2025, Scale AI publicó SWE-Bench Pro, un benchmark diseñado para algo distinto: tareas de larga duración en repositorios con licencias copyleft y bases de código privadas de startups — tareas que a un ingeniero profesional le llevarían horas o días. Aquí los números cambian radicalmente: los mejores modelos, incluidos GPT-5 y Claude Opus 4.1, no superaron el 23% de resolución.
 
