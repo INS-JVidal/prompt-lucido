@@ -1,8 +1,8 @@
 ---
 title: "AI Understands Your Code. It Doesn't Understand Your Project."
 description: "AI models solve 80% of benchmark problems but collapse to 23% when the task demands real comprehension. The gap between those two numbers is exactly what you bring to the table — and what you should never delegate."
-pubDate: "2026-02-17"
-updatedDate: "2026-02-17"
+pubDate: "2026-02-16"
+updatedDate: "2026-02-16"
 author: "Prompt Lúcido"
 tags: ["ai", "development", "understanding", "context", "software-engineering"]
 category: "the-five-activities"
