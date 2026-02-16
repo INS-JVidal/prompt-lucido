@@ -16,6 +16,7 @@ image:
   alt: ""
 readingTime: 8
 translationId: "ai-understands-code-not-project"
+audio: true
 ---
 
 You've got a bug in production. An endpoint returns inconsistent data, but only when two users edit the same resource within a three-second window. You paste the controller code into Claude, describe the problem, and in under a minute you get a detailed response: the model identifies the race condition, explains why it happens, and proposes an optimistic locking solution that is technically flawless.

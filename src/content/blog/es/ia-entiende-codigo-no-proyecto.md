@@ -16,6 +16,7 @@ image:
   alt: ""
 readingTime: 8
 translationId: "ai-understands-code-not-project"
+audio: true
 ---
 
 Tienes un bug en producción. Un endpoint devuelve datos inconsistentes, pero solo cuando dos usuarios editan el mismo recurso en un intervalo de menos de tres segundos. Le pegas el código del controlador a Claude, le describes el problema, y en menos de un minuto tienes una respuesta detallada: el modelo identifica la race condition, te explica por qué ocurre, y te propone una solución con bloqueo optimista que es técnicamente impecable.
