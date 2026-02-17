@@ -11,8 +11,8 @@ seriesOrder: 1
 draft: false
 lang: "en"
 image:
-  src: "/images/blog/succinct-tokens.svg"
-  mobileSrc: "/images/blog/succinct-tokens-mobile.svg"
+  src: "/images/blog/succinct.svg"
+  mobileSrc: "/images/blog/succinct-mobile.svg"
   alt: ""
 readingTime: 4
 translationId: "succinct-magic-word"
