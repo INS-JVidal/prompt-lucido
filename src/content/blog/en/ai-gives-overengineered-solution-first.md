@@ -8,7 +8,7 @@ tags: ["ai coding assistant", "software design", "technical debt", "ai software 
 category: "las-cinco-actividades"
 series: "The Five Things AI Won't Do for You"
 seriesOrder: 3
-draft: true
+draft: false
 lang: "en"
 image:
   src: "/images/blog/solucion-elaborada-ia-primero.svg"
