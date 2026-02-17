@@ -2,7 +2,7 @@
 title: "The Magic Word That Saves Tokens: Succinct"
 description: "One word can cut your responses from 800 to 90 tokens in any LLM. How to shift the model's probability distribution with a simple instruction."
 pubDate: "2026-02-17"
-updatedDate: "2026-02-17"
+updatedDate: "2026-02-18"
 author: "Prompt Lúcido"
 tags: ["prompts", "token-optimization", "chatgpt", "claude", "ai", "development", "prompt-engineering", "api", "efficiency", "costs"]
 category: "fundamentals"
