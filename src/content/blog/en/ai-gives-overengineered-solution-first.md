@@ -16,7 +16,7 @@ image:
   alt: ""
 readingTime: 8
 translationId: "solucion-elaborada-ia-te-da-primero"
-audio: false
+audio: true
 ---
 
 You ask AI for a user management API. It hands you a microservice with OAuth2, rate limiting, logging middleware, and a Redis caching layer.
