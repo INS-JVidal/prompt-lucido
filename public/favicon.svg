@@ -1,5 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" rx="96" fill="#1A1A19"/>
-  <path d="M152 148 L152 310 Q152 388 230 388 L282 388 Q360 388 360 310 L360 148 L312 148 L312 306 Q312 344 278 344 L234 344 Q200 344 200 306 L200 148 Z" fill="#FAF9F6"/>
-  <path d="M268 68 L202 128 L232 128 L298 68 Z" fill="#C4704A"/>
+  <!-- > prompt chevron -->
+  <path d="M120 160 L300 268 L120 376" stroke="#FAF9F6" stroke-width="52" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- cursor block -->
+  <rect x="340" y="244" width="60" height="48" rx="4" fill="#FAF9F6" opacity="0.35"/>
+  <!-- acute accent -->
+  <path d="M310 80 L244 140 L274 140 L340 80 Z" fill="#C4704A"/>
 </svg>
