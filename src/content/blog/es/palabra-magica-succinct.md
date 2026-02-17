@@ -2,7 +2,7 @@
 title: "La palabra mágica que ahorra tokens: succinct"
 description: "Una sola palabra puede reducir tus respuestas de 800 a 90 tokens en cualquier LLM. Cómo cambiar la distribución de probabilidad del modelo con una instrucción simple."
 pubDate: "2026-02-18"
-updatedDate: "2026-02-17"
+updatedDate: "2026-02-18"
 author: "Prompt Lúcido"
 tags: ["prompts", "optimización-tokens", "chatgpt", "claude", "ia", "desarrollo", "ingeniería-prompts", "api", "eficiencia", "costos"]
 category: "fundamentos"
