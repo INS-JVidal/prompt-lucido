@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 630 630">
+
+  <defs>
+
+    <!-- Warm gradient background -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FAF9F6"/>
+      <stop offset="100%" stop-color="#F0EFEA"/>
+    </linearGradient>
+
+    <!-- Terracotta gradient for accent shapes -->
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C4704A"/>
+      <stop offset="100%" stop-color="#A85A38"/>
+    </linearGradient>
+
+    <!-- Subtle warm glow, centered top -->
+    <radialGradient id="glow" cx="0.5" cy="0.3" r="0.4">
+      <stop offset="0%" stop-color="#C4704A" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#C4704A" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Glow for complex bottom -->
+    <radialGradient id="glow-bottom" cx="0.5" cy="0.72" r="0.35">
+      <stop offset="0%" stop-color="#C4704A" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#C4704A" stop-opacity="0"/>
+    </radialGradient>
+
+  </defs>
+
+  <!-- Background -->
+  <rect width="630" height="630" fill="url(#bg)"/>
+  <rect width="630" height="630" fill="url(#glow)"/>
+  <rect width="630" height="630" fill="url(#glow-bottom)"/>
+
+
+  <!-- ============================================ -->
+  <!-- TOP: Simple, elegant cluster (what you need) -->
+  <!-- ============================================ -->
+
+  <!-- Connections between simple nodes -->
+  <line x1="280" y1="140" x2="320" y2="185" stroke="#E0DFDA" stroke-width="1.5" opacity="0.6"/>
+  <line x1="320" y1="185" x2="290" y2="230" stroke="#E0DFDA" stroke-width="1.5" opacity="0.6"/>
+  <line x1="320" y1="185" x2="375" y2="165" stroke="#E0DFDA" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Simple nodes -->
+  <circle cx="280" cy="140" r="8" fill="url(#accent)" opacity="0.7"/>
+  <circle cx="320" cy="185" r="10" fill="url(#accent)" opacity="0.8"/>
+  <circle cx="290" cy="230" r="7" fill="url(#accent)" opacity="0.6"/>
+  <circle cx="375" cy="165" r="6" fill="url(#accent)" opacity="0.65"/>
+
+  <!-- Subtle ring around the simple cluster -->
+  <circle cx="320" cy="180" r="75" fill="none" stroke="#E0DFDA" stroke-width="1" opacity="0.3"/>
+
+  <!-- Small decorative square -->
+  <rect x="250" y="200" width="8" height="8" rx="1.5" fill="#C4704A" opacity="0.25" transform="rotate(20, 254, 204)"/>
+
+
+  <!-- ============================================ -->
+  <!-- CENTER: Expansion arrows (simple → complex) -->
+  <!-- ============================================ -->
+
+  <!-- Radiating dashed lines downward -->
+  <line x1="295" y1="270" x2="260" y2="340" stroke="#C4704A" stroke-width="1" stroke-dasharray="6,4" opacity="0.2"/>
+  <line x1="315" y1="275" x2="315" y2="350" stroke="#C4704A" stroke-width="1.2" stroke-dasharray="8,4" opacity="0.25"/>
+  <line x1="335" y1="270" x2="370" y2="340" stroke="#C4704A" stroke-width="1" stroke-dasharray="6,4" opacity="0.2"/>
+
+  <!-- Small arrow-like chevrons suggesting downward direction -->
+  <path d="M 270 310 L 265 325 L 280 320" fill="none" stroke="#C4704A" stroke-width="1" opacity="0.2"/>
+  <path d="M 310 315 L 315 330 L 320 315" fill="none" stroke="#C4704A" stroke-width="1.2" opacity="0.3"/>
+  <path d="M 355 310 L 365 325 L 350 320" fill="none" stroke="#C4704A" stroke-width="1" opacity="0.2"/>
+
+
+  <!-- ============================================ -->
+  <!-- BOTTOM: Overengineered sprawl (what AI generates) -->
+  <!-- ============================================ -->
+
+  <!-- Concentric rings -->
+  <circle cx="315" cy="470" r="140" fill="none" stroke="#E0DFDA" stroke-width="1" opacity="0.25"/>
+  <circle cx="315" cy="470" r="100" fill="none" stroke="#E0DFDA" stroke-width="1" opacity="0.3"/>
+  <circle cx="315" cy="470" r="60" fill="none" stroke="#E0DFDA" stroke-width="0.8" opacity="0.2"/>
+
+  <!-- Dense connection web -->
+  <line x1="255" y1="400" x2="315" y2="430" stroke="#E0DFDA" stroke-width="1.2" opacity="0.5"/>
+  <line x1="315" y1="430" x2="380" y2="410" stroke="#E0DFDA" stroke-width="1.2" opacity="0.5"/>
+  <line x1="380" y1="410" x2="400" y2="465" stroke="#E0DFDA" stroke-width="1" opacity="0.45"/>
+  <line x1="400" y1="465" x2="375" y2="520" stroke="#E0DFDA" stroke-width="1" opacity="0.45"/>
+  <line x1="375" y1="520" x2="315" y2="535" stroke="#E0DFDA" stroke-width="1.2" opacity="0.5"/>
+  <line x1="315" y1="535" x2="255" y2="520" stroke="#E0DFDA" stroke-width="1" opacity="0.45"/>
+  <line x1="255" y1="520" x2="230" y2="465" stroke="#E0DFDA" stroke-width="1" opacity="0.45"/>
+  <line x1="230" y1="465" x2="255" y2="400" stroke="#E0DFDA" stroke-width="1.2" opacity="0.5"/>
+  <line x1="315" y1="430" x2="375" y2="520" stroke="#E0DFDA" stroke-width="0.8" opacity="0.35"/>
+  <line x1="380" y1="410" x2="255" y2="520" stroke="#E0DFDA" stroke-width="0.8" opacity="0.3"/>
+  <line x1="400" y1="465" x2="230" y2="465" stroke="#E0DFDA" stroke-width="0.8" opacity="0.3"/>
+  <line x1="315" y1="535" x2="315" y2="430" stroke="#E0DFDA" stroke-width="0.8" opacity="0.3"/>
+  <line x1="255" y1="400" x2="375" y2="520" stroke="#E0DFDA" stroke-width="0.6" opacity="0.2"/>
+  <line x1="380" y1="410" x2="315" y2="535" stroke="#E0DFDA" stroke-width="0.6" opacity="0.2"/>
+
+  <!-- Secondary outer connections -->
+  <line x1="255" y1="400" x2="200" y2="365" stroke="#E0DFDA" stroke-width="0.8" opacity="0.3"/>
+  <line x1="380" y1="410" x2="440" y2="375" stroke="#E0DFDA" stroke-width="0.8" opacity="0.3"/>
+  <line x1="400" y1="465" x2="465" y2="465" stroke="#E0DFDA" stroke-width="0.8" opacity="0.3"/>
+  <line x1="375" y1="520" x2="430" y2="560" stroke="#E0DFDA" stroke-width="0.8" opacity="0.3"/>
+  <line x1="315" y1="535" x2="315" y2="590" stroke="#E0DFDA" stroke-width="0.8" opacity="0.3"/>
+  <line x1="255" y1="520" x2="200" y2="560" stroke="#E0DFDA" stroke-width="0.8" opacity="0.3"/>
+  <line x1="230" y1="465" x2="165" y2="465" stroke="#E0DFDA" stroke-width="0.8" opacity="0.3"/>
+
+  <!-- Tertiary connections -->
+  <line x1="200" y1="365" x2="175" y2="340" stroke="#E0DFDA" stroke-width="0.6" opacity="0.2"/>
+  <line x1="440" y1="375" x2="470" y2="355" stroke="#E0DFDA" stroke-width="0.6" opacity="0.2"/>
+  <line x1="465" y1="465" x2="495" y2="450" stroke="#E0DFDA" stroke-width="0.6" opacity="0.2"/>
+  <line x1="430" y1="560" x2="455" y2="585" stroke="#E0DFDA" stroke-width="0.6" opacity="0.2"/>
+  <line x1="200" y1="560" x2="175" y2="585" stroke="#E0DFDA" stroke-width="0.6" opacity="0.2"/>
+
+  <!-- Main cluster nodes (inner ring) -->
+  <circle cx="315" cy="430" r="5" fill="url(#accent)" opacity="0.7"/>
+  <circle cx="380" cy="410" r="4.5" fill="url(#accent)" opacity="0.65"/>
+  <circle cx="400" cy="465" r="4" fill="url(#accent)" opacity="0.6"/>
+  <circle cx="375" cy="520" r="4.5" fill="url(#accent)" opacity="0.65"/>
+  <circle cx="315" cy="535" r="5" fill="url(#accent)" opacity="0.7"/>
+  <circle cx="255" cy="520" r="4" fill="url(#accent)" opacity="0.6"/>
+  <circle cx="230" cy="465" r="4.5" fill="url(#accent)" opacity="0.65"/>
+  <circle cx="255" cy="400" r="4" fill="url(#accent)" opacity="0.6"/>
+
+  <!-- Outer nodes -->
+  <circle cx="200" cy="365" r="3.5" fill="#C4704A" opacity="0.45"/>
+  <circle cx="440" cy="375" r="3" fill="#C4704A" opacity="0.4"/>
+  <circle cx="465" cy="465" r="3.5" fill="#C4704A" opacity="0.45"/>
+  <circle cx="430" cy="560" r="3" fill="#C4704A" opacity="0.4"/>
+  <circle cx="315" cy="590" r="3.5" fill="#C4704A" opacity="0.45"/>
+  <circle cx="200" cy="560" r="3" fill="#C4704A" opacity="0.4"/>
+  <circle cx="165" cy="465" r="3.5" fill="#C4704A" opacity="0.45"/>
+
+  <!-- Tertiary nodes -->
+  <circle cx="175" cy="340" r="2.5" fill="#6B6B63" opacity="0.3"/>
+  <circle cx="470" cy="355" r="2" fill="#6B6B63" opacity="0.25"/>
+  <circle cx="495" cy="450" r="2.5" fill="#6B6B63" opacity="0.3"/>
+  <circle cx="455" cy="585" r="2" fill="#6B6B63" opacity="0.25"/>
+  <circle cx="175" cy="585" r="2" fill="#6B6B63" opacity="0.25"/>
+
+  <!-- Small rectangles suggesting unnecessary abstractions -->
+  <rect x="270" y="440" width="25" height="15" rx="2.5" fill="none" stroke="#E0DFDA" stroke-width="0.8" opacity="0.35"/>
+  <rect x="340" y="490" width="22" height="13" rx="2" fill="none" stroke="#E0DFDA" stroke-width="0.8" opacity="0.3"/>
+  <rect x="350" y="380" width="20" height="12" rx="2" fill="none" stroke="#E0DFDA" stroke-width="0.8" opacity="0.25"/>
+  <rect x="280" y="555" width="24" height="14" rx="2" fill="none" stroke="#E0DFDA" stroke-width="0.8" opacity="0.3"/>
+
+  <!-- Rotated squares — visual punctuation -->
+  <rect x="420" y="420" width="7" height="7" rx="1.5" fill="#C4704A" opacity="0.3" transform="rotate(25, 423, 423)"/>
+  <rect x="210" y="430" width="6" height="6" rx="1" fill="#C4704A" opacity="0.25" transform="rotate(35, 213, 433)"/>
+  <rect x="365" y="570" width="6" height="6" rx="1.5" fill="#C4704A" opacity="0.2" transform="rotate(15, 368, 573)"/>
+
+  <!-- Ring elements in the complex cluster -->
+  <circle cx="315" cy="470" r="30" fill="none" stroke="#C4704A" stroke-width="1" opacity="0.15"/>
+  <circle cx="350" cy="445" r="12" fill="none" stroke="#6B6B63" stroke-width="0.8" opacity="0.2"/>
+  <circle cx="280" cy="505" r="10" fill="none" stroke="#6B6B63" stroke-width="0.8" opacity="0.18"/>
+
+</svg>
