@@ -8,7 +8,7 @@ tags: ["inteligencia artificial", "desarrollo de software", "diseño de software
 category: "las-cinco-actividades"
 series: "Las cinco actividades"
 seriesOrder: 3
-draft: true
+draft: false
 lang: "es"
 image:
   src: "/images/blog/solucion-elaborada-ia-primero.svg"
