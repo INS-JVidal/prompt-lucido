@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 630 630">
+
+  <defs>
+
+    <!-- Warm gradient background -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FAF9F6"/>
+      <stop offset="100%" stop-color="#F0EFEA"/>
+    </linearGradient>
+
+    <!-- Terracotta gradient for accent shapes -->
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C4704A"/>
+      <stop offset="100%" stop-color="#A85A38"/>
+    </linearGradient>
+
+    <!-- Subtle warm glow, centered top -->
+    <radialGradient id="glow" cx="0.5" cy="0.3" r="0.4">
+      <stop offset="0%" stop-color="#C4704A" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#C4704A" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Glow for the clean stroke area -->
+    <radialGradient id="glow-bottom" cx="0.5" cy="0.78" r="0.3">
+      <stop offset="0%" stop-color="#C4704A" stop-opacity="0.07"/>
+      <stop offset="100%" stop-color="#C4704A" stop-opacity="0"/>
+    </radialGradient>
+
+  </defs>
+
+  <!-- Background -->
+  <rect width="630" height="630" fill="url(#bg)"/>
+  <rect width="630" height="630" fill="url(#glow)"/>
+  <rect width="630" height="630" fill="url(#glow-bottom)"/>
+
+
+  <!-- ============================================ -->
+  <!-- TOP: Scattered noisy strokes (verbosity) -->
+  <!-- ============================================ -->
+
+  <!-- Layer 1: Lightest, most scattered -->
+  <line x1="80" y1="70" x2="125" y2="85" stroke="#E0DFDA" stroke-width="1.5" opacity="0.25" stroke-linecap="round"/>
+  <line x1="140" y1="50" x2="175" y2="75" stroke="#E0DFDA" stroke-width="1" opacity="0.2" stroke-linecap="round"/>
+  <line x1="60" y1="130" x2="105" y2="120" stroke="#E0DFDA" stroke-width="1.2" opacity="0.22" stroke-linecap="round"/>
+  <line x1="460" y1="60" x2="510" y2="80" stroke="#E0DFDA" stroke-width="1" opacity="0.2" stroke-linecap="round"/>
+  <line x1="500" y1="110" x2="545" y2="95" stroke="#E0DFDA" stroke-width="1.5" opacity="0.25" stroke-linecap="round"/>
+  <line x1="520" y1="155" x2="565" y2="170" stroke="#E0DFDA" stroke-width="1.2" opacity="0.22" stroke-linecap="round"/>
+  <line x1="50" y1="185" x2="90" y2="170" stroke="#E0DFDA" stroke-width="1" opacity="0.18" stroke-linecap="round"/>
+  <line x1="480" y1="175" x2="520" y2="195" stroke="#E0DFDA" stroke-width="1" opacity="0.2" stroke-linecap="round"/>
+
+  <!-- Layer 2: Medium density -->
+  <line x1="160" y1="100" x2="220" y2="115" stroke="#E0DFDA" stroke-width="1.8" opacity="0.3" stroke-linecap="round"/>
+  <line x1="200" y1="145" x2="255" y2="135" stroke="#E0DFDA" stroke-width="1.5" opacity="0.28" stroke-linecap="round"/>
+  <line x1="180" y1="190" x2="235" y2="200" stroke="#E0DFDA" stroke-width="2" opacity="0.32" stroke-linecap="round"/>
+  <line x1="350" y1="90" x2="405" y2="80" stroke="#E0DFDA" stroke-width="1.5" opacity="0.28" stroke-linecap="round"/>
+  <line x1="380" y1="130" x2="435" y2="145" stroke="#6B6B63" stroke-width="1.2" opacity="0.2" stroke-linecap="round"/>
+  <line x1="420" y1="100" x2="470" y2="120" stroke="#6B6B63" stroke-width="1.5" opacity="0.22" stroke-linecap="round"/>
+  <line x1="140" y1="165" x2="195" y2="155" stroke="#E0DFDA" stroke-width="1.5" opacity="0.25" stroke-linecap="round"/>
+  <line x1="400" y1="175" x2="450" y2="160" stroke="#6B6B63" stroke-width="1.2" opacity="0.2" stroke-linecap="round"/>
+
+  <!-- Layer 3: Core cluster -->
+  <line x1="240" y1="120" x2="310" y2="140" stroke="#E0DFDA" stroke-width="2" opacity="0.35" stroke-linecap="round"/>
+  <line x1="270" y1="160" x2="340" y2="150" stroke="#E0DFDA" stroke-width="2.2" opacity="0.38" stroke-linecap="round"/>
+  <line x1="255" y1="200" x2="325" y2="210" stroke="#E0DFDA" stroke-width="2" opacity="0.35" stroke-linecap="round"/>
+  <line x1="290" y1="225" x2="355" y2="210" stroke="#6B6B63" stroke-width="1.8" opacity="0.28" stroke-linecap="round"/>
+  <line x1="230" y1="175" x2="300" y2="180" stroke="#6B6B63" stroke-width="2" opacity="0.3" stroke-linecap="round"/>
+  <line x1="310" y1="100" x2="365" y2="120" stroke="#E0DFDA" stroke-width="1.8" opacity="0.32" stroke-linecap="round"/>
+  <line x1="340" y1="185" x2="400" y2="195" stroke="#E0DFDA" stroke-width="1.8" opacity="0.3" stroke-linecap="round"/>
+  <line x1="280" y1="80" x2="340" y2="95" stroke="#6B6B63" stroke-width="1.5" opacity="0.25" stroke-linecap="round"/>
+
+  <!-- Cross-hatching strokes -->
+  <line x1="150" y1="110" x2="200" y2="170" stroke="#E0DFDA" stroke-width="1" opacity="0.18" stroke-linecap="round"/>
+  <line x1="280" y1="110" x2="260" y2="185" stroke="#E0DFDA" stroke-width="1.2" opacity="0.2" stroke-linecap="round"/>
+  <line x1="350" y1="120" x2="330" y2="200" stroke="#E0DFDA" stroke-width="1" opacity="0.18" stroke-linecap="round"/>
+  <line x1="410" y1="130" x2="390" y2="200" stroke="#E0DFDA" stroke-width="1" opacity="0.15" stroke-linecap="round"/>
+
+  <!-- Faint decorative circles -->
+  <circle cx="200" cy="150" r="22" fill="none" stroke="#E0DFDA" stroke-width="0.8" opacity="0.15"/>
+  <circle cx="370" cy="160" r="16" fill="none" stroke="#6B6B63" stroke-width="0.8" opacity="0.12"/>
+  <circle cx="120" cy="130" r="12" fill="none" stroke="#E0DFDA" stroke-width="0.6" opacity="0.1"/>
+
+  <!-- Rotated squares -->
+  <rect x="175" y="195" width="7" height="7" rx="1.5" fill="#C4704A" opacity="0.2" transform="rotate(30, 178, 198)"/>
+  <rect x="310" y="110" width="6" height="6" rx="1" fill="#C4704A" opacity="0.18" transform="rotate(45, 313, 113)"/>
+  <rect x="440" y="140" width="5" height="5" rx="1" fill="#C4704A" opacity="0.15" transform="rotate(20, 442, 142)"/>
+  <rect x="130" y="80" width="6" height="6" rx="1" fill="#C4704A" opacity="0.2" transform="rotate(35, 133, 83)"/>
+
+
+  <!-- ============================================ -->
+  <!-- TRANSITION ZONE: Strokes thinning & fading -->
+  <!-- ============================================ -->
+
+  <!-- Progressively thinner, fainter strokes going downward -->
+  <line x1="170" y1="270" x2="240" y2="280" stroke="#E0DFDA" stroke-width="1.5" opacity="0.22" stroke-linecap="round"/>
+  <line x1="300" y1="265" x2="370" y2="275" stroke="#E0DFDA" stroke-width="1.2" opacity="0.18" stroke-linecap="round"/>
+  <line x1="390" y1="280" x2="450" y2="270" stroke="#E0DFDA" stroke-width="1" opacity="0.15" stroke-linecap="round"/>
+  <line x1="230" y1="300" x2="300" y2="295" stroke="#6B6B63" stroke-width="0.8" opacity="0.12" stroke-linecap="round"/>
+  <line x1="340" y1="305" x2="400" y2="295" stroke="#E0DFDA" stroke-width="0.6" opacity="0.08" stroke-linecap="round"/>
+
+  <!-- Subtle dashed lines connecting noise to signal -->
+  <line x1="230" y1="280" x2="280" y2="430" stroke="#C4704A" stroke-width="0.8" stroke-dasharray="6,6" opacity="0.12"/>
+  <line x1="315" y1="275" x2="315" y2="430" stroke="#C4704A" stroke-width="1" stroke-dasharray="8,5" opacity="0.15"/>
+  <line x1="400" y1="280" x2="350" y2="430" stroke="#C4704A" stroke-width="0.8" stroke-dasharray="6,6" opacity="0.12"/>
+
+
+  <!-- ============================================ -->
+  <!-- BOTTOM: The single clean stroke (succinct) -->
+  <!-- ============================================ -->
+
+  <!-- Main bold stroke — the hero element -->
+  <line x1="100" y1="460" x2="530" y2="460" stroke="url(#accent)" stroke-width="5" opacity="0.95" stroke-linecap="round"/>
+
+  <!-- Subtle glow/shadow under the stroke -->
+  <line x1="110" y1="464" x2="520" y2="464" stroke="#C4704A" stroke-width="8" opacity="0.06" stroke-linecap="round"/>
+
+  <!-- Very faint echo lines -->
+  <line x1="120" y1="442" x2="510" y2="442" stroke="#E0DFDA" stroke-width="0.6" opacity="0.1" stroke-linecap="round"/>
+  <line x1="120" y1="480" x2="510" y2="480" stroke="#E0DFDA" stroke-width="0.6" opacity="0.1" stroke-linecap="round"/>
+
+  <!-- Small decorative elements near the clean stroke -->
+  <rect x="80" y="435" width="8" height="8" rx="1.5" fill="#C4704A" opacity="0.25" transform="rotate(25, 84, 439)"/>
+  <rect x="540" y="448" width="7" height="7" rx="1.5" fill="#C4704A" opacity="0.2" transform="rotate(15, 543, 451)"/>
+
+  <!-- Faint ring at the start of the stroke -->
+  <circle cx="100" cy="460" r="12" fill="none" stroke="#C4704A" stroke-width="1" opacity="0.15"/>
+
+  <!-- Small circle at the end -->
+  <circle cx="530" cy="460" r="6" fill="url(#accent)" opacity="0.5"/>
+
+  <!-- Subtle outer ring for breathing space -->
+  <circle cx="315" cy="460" r="120" fill="none" stroke="#E0DFDA" stroke-width="0.8" opacity="0.12"/>
+
+</svg>
