@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; font-src data:; media-src data:; frame-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="version" content="1.0">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Una web des de zero, amb les etiquetes que toquen</title>
 <!-- Fonts incrustades (Lato + JetBrains Mono). Cap petició de xarxa: funciona offline i des d'un USB. -->
@@ -198,6 +199,8 @@ label{font-size:.86rem; font-weight:700}
 .count{font-family:var(--mono); font-size:.78rem; color:var(--muted); font-variant-numeric:tabular-nums; flex:0 0 auto}
 .navbar .btn{padding:.3rem .55rem}
 .keys{font-family:var(--mono); font-size:.7rem; color:var(--muted)}
+.ver{font-family:var(--mono); font-size:.7rem; color:var(--muted); flex:0 0 auto}
+.ov-head .ver{margin-left:auto}
 @media (max-width:640px){ .keys{display:none} }
 
 /* ---------- overview ---------- */
@@ -2125,10 +2128,11 @@ Tanquem al migdia, de 13:00 a 15:00.</p>
     <span class="count" id="count">1 / 85</span>
     <button class="btn" id="ov-open" aria-label="Índex de diapositives">☰</button>
     <span class="keys">← → · <kbd>O</kbd> índex · <kbd>N</kbd> guió · <kbd>F</kbd> pantalla completa</span>
+    <span class="ver" title="Versió 1.0, generada el 5/10/2026">v1.0</span>
   </nav>
 </div>
 <div class="overview" id="overview" hidden>
-  <div class="ov-head"><h3 style="margin:0" id="ov-title"></h3><button class="btn" id="ov-close">Tanca</button></div>
+  <div class="ov-head"><h3 style="margin:0" id="ov-title"></h3><span class="ver">versió 1.0 · 5/10/2026</span><button class="btn" id="ov-close">Tanca</button></div>
   <div class="ov-grid" id="ov-grid"></div>
 </div>
 <script>
