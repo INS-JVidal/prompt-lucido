@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; font-src data:; media-src data:; frame-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
-<meta name="version" content="1.0">
+<meta name="version" content="1.1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>La mateixa web, ara amb comportament</title>
 <!-- Fonts incrustades (Lato + JetBrains Mono). Cap petició de xarxa: funciona offline i des d'un USB. -->
@@ -974,7 +974,7 @@ ol.cons .c-nav::before{content:"→"}
 /* 3 · the page */
 .dpg-view{flex:1; position:relative; min-height:20rem; border:1px solid var(--border); border-radius:10px; overflow:hidden; background:#fff}
 /* the page is laid out 25% wider and shown at 80%: the size of the code next to it, and six cards fit */
-.dpg-view iframe{position:absolute; inset:0 auto auto 0; display:block; width:125%; height:125%; border:0; transform:scale(.8); transform-origin:0 0}
+.dpg-view iframe{position:absolute; inset:0 auto auto 0; display:block; width:100%; height:100%; border:0; zoom:.8}
 .dpg-say{margin:0; max-width:none; min-height:3.2rem; line-height:1.45}
 .dpg-say.ko{border-left-color:var(--bad); background:var(--bad-soft)}
 .dpg-say.ok{border-left-color:var(--good); background:var(--good-soft)}
@@ -1944,8 +1944,8 @@ ol.cons .c-nav::before{content:"→"}
 .wj-vbar .btn.sm{padding:.2rem .55rem; font-size:.76rem}
 .wj-view{grid-column:2; position:relative; min-height:0; background:#fff}
 /* the page at 85 %: more of it fits, and it can still be read */
-.wj-view iframe{position:absolute; left:0; top:0; width:calc(100% / var(--wj-z)); height:calc(100% / var(--wj-z)); border:0; background:#fff;
-  transform:scale(var(--wj-z)); transform-origin:0 0}
+.wj-view iframe{position:absolute; left:0; top:0; width:100%; height:100%; border:0; background:#fff;
+  zoom:var(--wj-z)}
 
 /* the console: what the code wrote, with the line of app.js that wrote it */
 .wj-con{grid-column:2; display:flex; flex-direction:column; min-height:0; border-top:1px solid var(--border); background:var(--surface)}
@@ -3070,11 +3070,11 @@ form.addEventListener("submit", function (event) {
     <span class="count" id="count">1 / 48</span>
     <button class="btn" id="ov-open" aria-label="Índex de diapositives">☰</button>
     <span class="keys">← → · <kbd>O</kbd> índex · <kbd>N</kbd> guió · <kbd>F</kbd> pantalla completa</span>
-    <span class="ver" title="Versió 1.0, generada el 7/10/2026">v1.0</span>
+    <span class="ver" title="Versió 1.1, generada el 7/10/2026">v1.1</span>
   </nav>
 </div>
 <div class="overview" id="overview" hidden>
-  <div class="ov-head"><h3 style="margin:0" id="ov-title"></h3><span class="ver">versió 1.0 · 7/10/2026</span><button class="btn" id="ov-close">Tanca</button></div>
+  <div class="ov-head"><h3 style="margin:0" id="ov-title"></h3><span class="ver">versió 1.1 · 7/10/2026</span><button class="btn" id="ov-close">Tanca</button></div>
   <div class="ov-grid" id="ov-grid"></div>
 </div>
 <script>
@@ -5228,9 +5228,10 @@ Widgets.add('arbrejs', function(root){
       if (!sw) return;
       var s = phone ? Math.min(0.92, sw / w) : sw / w;
       fr.style.width = w + 'px'; fr.style.height = Math.ceil((sh - 2 * pad) / s) + 'px';
-      fr.style.transform = 'scale(' + s.toFixed(4) + ')';
-      fr.style.left = phone ? Math.max(0, (sw - w * s) / 2) + 'px' : '0';
-      fr.style.top = pad + 'px';
+      // zoom, not transform: Chrome opens a <select> or a date picker under its field only with zoom; left and top are zoomed too
+      fr.style.zoom = s.toFixed(4);
+      fr.style.left = phone ? Math.max(0, (sw - w * s) / 2) / s + 'px' : '0';
+      fr.style.top = pad / s + 'px';
       view.classList.toggle('cp-phone', phone);
       view.style.setProperty('--cp-pw', Math.round(w * s) + 'px');
     }
@@ -5919,7 +5920,7 @@ Widgets.add('dades', function(root){
     function fit(){
       var w = stage.clientWidth, h = stage.clientHeight; if (!w) return;
       var s = Math.min(1, w / 720);
-      fr.style.width = (w / s) + 'px'; fr.style.height = (h / s) + 'px'; fr.style.transform = 'scale(' + s.toFixed(4) + ')';
+      fr.style.width = (w / s) + 'px'; fr.style.height = (h / s) + 'px'; fr.style.zoom = s.toFixed(4);
     }
 
     /* ---------- the tree, from the DOM the page sends: left to right, leaves one under the other ---------- */
@@ -7078,7 +7079,7 @@ Widgets.add('formjs', function(root){
     var R = {fr: fr, o: null, hooks: hooks || {}};
     if (R.hooks.W){
       holder.classList.add('mj-fit');
-      var fit = function(){ var s = Math.min(1, holder.clientWidth / R.hooks.W) || 1; fr.style.width = R.hooks.W + 'px'; fr.style.height = Math.ceil(holder.clientHeight / s) + 'px'; fr.style.transform = 'scale(' + s.toFixed(4) + ')'; };
+      var fit = function(){ var s = Math.min(1, holder.clientWidth / R.hooks.W) || 1; fr.style.width = R.hooks.W + 'px'; fr.style.height = Math.ceil(holder.clientHeight / s) + 'px'; fr.style.zoom = s.toFixed(4); };
       fit(); if (window.ResizeObserver) new ResizeObserver(fit).observe(holder);
     }
     function add(cls, html){ var li = document.createElement('li'); li.className = cls; li.innerHTML = html; cons.appendChild(li); cons.scrollTop = cons.scrollHeight; }
