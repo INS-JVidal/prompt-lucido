@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; font-src data:; media-src data:; frame-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
-<meta name="version" content="1.0">
+<meta name="version" content="1.1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>La mateixa web, amb estils</title>
 <!-- Fonts incrustades (Lato + JetBrains Mono). Cap petició de xarxa: funciona offline i des d'un USB. -->
@@ -3709,11 +3709,11 @@ a:hover { background-color: #ffe9b8; }
     <span class="count" id="count">1 / 75</span>
     <button class="btn" id="ov-open" aria-label="Índex de diapositives">☰</button>
     <span class="keys">← → · <kbd>O</kbd> índex · <kbd>N</kbd> guió · <kbd>F</kbd> pantalla completa</span>
-    <span class="ver" title="Versió 1.0, generada el 6/10/2026">v1.0</span>
+    <span class="ver" title="Versió 1.1, generada el 7/10/2026">v1.1</span>
   </nav>
 </div>
 <div class="overview" id="overview" hidden>
-  <div class="ov-head"><h3 style="margin:0" id="ov-title"></h3><span class="ver">versió 1.0 · 6/10/2026</span><button class="btn" id="ov-close">Tanca</button></div>
+  <div class="ov-head"><h3 style="margin:0" id="ov-title"></h3><span class="ver">versió 1.1 · 7/10/2026</span><button class="btn" id="ov-close">Tanca</button></div>
   <div class="ov-grid" id="ov-grid"></div>
 </div>
 <script>
@@ -5673,7 +5673,7 @@ Widgets.add('centrar', function(root){
   function draw(){
     var s = desk.clientWidth / WMAX;
     win.style.width = (S.vw * s) + 'px';
-    fr.style.width = S.vw + 'px'; fr.style.height = H + 'px'; fr.style.transform = 'scale(' + s + ')';
+    fr.style.width = S.vw + 'px'; fr.style.height = H + 'px'; fr.style.zoom = s;
     vp.style.width = (S.vw * s) + 'px'; vp.style.height = (H * s) + 'px'; desk.style.setProperty('--ce-h', (H * s) + 'px');
     range.value = S.vw; $('[data-vwout]', root).textContent = S.vw + ' px';
     $$('[data-vw]', root).forEach(function(b){ b.setAttribute('aria-pressed', +b.dataset.vw === S.vw); });
@@ -7775,6 +7775,7 @@ Widgets.add('hereta', function(root){
       var fake = S.nometa && S.vw < FAKE, lw = fake ? FAKE : S.vw, s = dw / WMAX * S.vw / lw;
       frame.style.width = lw + 'px';
       frame.style.height = Math.ceil(view.clientHeight / s) + 'px';
+      // transform, not zoom: under zoom the page inside would measure a width 1-2 px off, and this slide is about the exact width
       frame.style.transform = 'scale(' + s + ')';
     }
     function draw(){
@@ -7918,7 +7919,7 @@ Widgets.add('hereta', function(root){
     box._fit = function(){
       var s = Math.min(1, vp.clientWidth / W) || 1;
       fr.style.width = W + 'px'; fr.style.height = Math.ceil(vp.clientHeight / s) + 'px';
-      fr.style.transform = 'scale(' + s.toFixed(4) + ')'; fr.style.left = Math.max(0, (vp.clientWidth - W * s) / 2) + 'px';
+      fr.style.zoom = s.toFixed(4); fr.style.left = Math.max(0, (vp.clientWidth - W * s) / 2) / s + 'px';
       box.querySelector('[data-ww]').textContent = 'finestra de ' + W + ' px' + (s < 0.995 ? ' · dibuixada al ' + Math.round(s * 100) + ' %' : '');
     };
     box._fit();
@@ -8799,7 +8800,7 @@ Widgets.add('hereta', function(root){
     function fit(){
       var box = fr.parentNode, w = box.clientWidth, h = box.clientHeight - 22; if (!w || !ready) return;
       var s = 0.8, d = fr.contentDocument;
-      fr.style.width = (w / s) + 'px'; fr.style.height = (h / s) + 'px'; fr.style.transform = 'scale(' + s + ')';
+      fr.style.width = (w / s) + 'px'; fr.style.height = (h / s) + 'px'; fr.style.zoom = s; fr.style.top = (22 / s) + 'px';   // under zoom, top is zoomed too
       if (d && d.scrollingElement) d.scrollingElement.scrollTop = 0;
     }
     function light(){
@@ -8983,7 +8984,7 @@ Widgets.add('hereta', function(root){
     function fit(){
       var w = stage.clientWidth, h = stage.clientHeight; if (!w) return;
       var s = Math.min(1, w / 720);
-      fr.style.width = (w / s) + 'px'; fr.style.height = (h / s) + 'px'; fr.style.transform = 'scale(' + s.toFixed(4) + ')';
+      fr.style.width = (w / s) + 'px'; fr.style.height = (h / s) + 'px'; fr.style.zoom = s.toFixed(4);
     }
 
     /* ---------- the tree: left to right, leaves one under the other, each parent in the middle of its children ---------- */
@@ -9240,9 +9241,10 @@ Widgets.add('hereta', function(root){
       if (!sw) return;
       var s = F.phone ? Math.min(1, (sh - 2 * pad) / 600, sw / w) : sw / w;
       fr.style.width = w + 'px'; fr.style.height = Math.ceil((sh - 2 * pad) / s) + 'px';
-      fr.style.transform = 'scale(' + s.toFixed(4) + ')';
-      fr.style.left = F.phone ? Math.max(0, (sw - w * s) / 2) + 'px' : '0';
-      fr.style.top = pad + 'px';
+      // zoom, not transform: Chrome opens a <select> or a date picker under its field only with zoom; left and top are zoomed too
+      fr.style.zoom = s.toFixed(4);
+      fr.style.left = F.phone ? Math.max(0, (sw - w * s) / 2) / s + 'px' : '0';
+      fr.style.top = pad / s + 'px';
       view.classList.toggle('te-phone', !!F.phone);
       view.style.setProperty('--te-pw', Math.round(w * s) + 'px');
     }
@@ -9718,7 +9720,7 @@ Widgets.add('unitats', function(root){
     function fit(){
       var w = view.clientWidth; if (!w) return;
       var s = w / W;
-      frame.style.width = W + 'px'; frame.style.height = Math.ceil(view.clientHeight / s) + 'px'; frame.style.transform = 'scale(' + s + ')';
+      frame.style.width = W + 'px'; frame.style.height = Math.ceil(view.clientHeight / s) + 'px'; frame.style.zoom = s;
     }
 
     // the code, with the definitions and every var() marked
@@ -10169,7 +10171,7 @@ Widgets.add('unitats', function(root){
         scale = Math.min(1, aw / w);
         var left = Math.max(0, (aw - w * scale) / 2);
         frame.style.cssText = 'left:' + left + 'px;top:0;width:' + (w * scale) + 'px;height:' + ah + 'px';
-        fr.style.cssText = 'width:' + w + 'px;height:' + (ah / scale) + 'px;transform:scale(' + scale + ')';
+        fr.style.cssText = 'width:' + w + 'px;height:' + (ah / scale) + 'px;zoom:' + scale;
       }
       frame.classList.toggle('dev', !!w && w * scale < aw - 2);
       ovl.style.cssText = frame.style.cssText;
