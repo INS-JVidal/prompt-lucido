@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; font-src data:; media-src data:; frame-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ancoratge i creixement</title>
+<style>
+  :root {
+    --fons: #f4f6f9; --carta: #ffffff; --text: #1b2330; --suau: #5b667a; --linia: #d5dbe5;
+    --blau: #2f6fed; --blau-clar: #e6eefe; --negre: #1b2330; --titol: #101826;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --fons: #11161f; --carta: #1a2130; --text: #e6ebf5; --suau: #9aa6bd; --linia: #33405a;
+      --blau: #6b9bff; --blau-clar: #1f2b48; --negre: #e6ebf5; --titol: #ffffff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fons); color: var(--text); font: 16px/1.5 "Lato", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 1040px; margin: 0 auto; padding: 24px 16px 64px; }
+  header { margin-bottom: 8px; }
+  h1 { margin: 0 0 4px; font-size: 30px; color: var(--titol); }
+  h2 { margin: 40px 0 6px; font-size: 22px; color: var(--titol); }
+  p.sub { margin: 0; color: var(--suau); }
+  section { margin-top: 8px; }
+  .carta { background: var(--carta); border: 1px solid var(--linia); border-radius: 12px; padding: 16px; }
+  .eines { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin: 10px 0; }
+  .eines .etiqueta { color: var(--suau); font-size: 14px; margin-right: 4px; }
+  .eines.min { border-top: 1px dashed var(--linia); padding-top: 10px; font-size: 14px; }
+  .eines label { display: inline-flex; gap: 6px; align-items: center; }
+  .eines label.apagat { opacity: .45; }
+  button.p, button.t { font: inherit; font-size: 14px; border: 1px solid var(--linia); background: var(--carta); color: var(--text);
+    padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+  button.p:hover, button.t:hover { border-color: var(--blau); }
+  button.p[aria-pressed="true"] { background: var(--blau); border-color: var(--blau); color: #fff; }
+  .escenari { overflow-x: auto; padding: 4px 0 8px; }
+
+  /* La finestra d'exemple */
+  .finestra { position: relative; display: inline-block; border: 1px solid #8a94a8; background: #fff; border-radius: 6px 6px 0 0; box-shadow: 0 6px 20px rgba(20,30,50,.15); }
+  .titol-fin { height: 30px; background: #eef0f4; border-bottom: 1px solid #c8cedb; font-size: 13px; color: #334; padding: 6px 10px; border-radius: 6px 6px 0 0; user-select: none; white-space: nowrap; overflow: hidden; }
+  .titol-fin b { color: #b4570a; font-weight: 700; }
+  .client { position: relative; background: #fff; overflow: hidden; }
+  .nanses { position: absolute; right: 0; bottom: 0; width: 22px; height: 22px; cursor: nwse-resize; z-index: 20; touch-action: none; }
+  .nanses::before { content: ""; position: absolute; right: 3px; bottom: 3px; width: 14px; height: 14px;
+    background: linear-gradient(135deg, transparent 50%, #8a94a8 50%, #8a94a8 58%, transparent 58%, transparent 70%, #8a94a8 70%, #8a94a8 78%, transparent 78%); }
+
+  /* El control i les quatre línies */
+  .control { position: absolute; background: #e1e1e1; border: 2px solid #5a7fc7; color: #111; display: flex; align-items: center; justify-content: center;
+    font-size: 15px; cursor: grab; user-select: none; touch-action: none; z-index: 5; overflow: hidden; }
+  .control.arrossegant { cursor: grabbing; }
+  .linia { position: absolute; background: var(--blau); opacity: .75; z-index: 2; pointer-events: none; }
+  .linia.lliure { background: none; border-top: 1px dashed #9aa4b8; border-left: 1px dashed #9aa4b8; opacity: 1; }
+  .linia.h { height: 0; } .linia.v { width: 0; }
+  .num { position: absolute; font-size: 12px; color: var(--blau); background: #fff; padding: 0 3px; z-index: 6; transform: translate(-50%, -50%); pointer-events: none; font-weight: 700; }
+  .simbol { position: absolute; z-index: 10; width: 28px; height: 28px; margin: -14px 0 0 -14px; border: 0; background: transparent; padding: 0; cursor: pointer; border-radius: 6px; }
+  .simbol:hover, .simbol:focus-visible { background: rgba(47,111,237,.14); outline: none; }
+  .simbol svg { width: 24px; height: 24px; display: block; margin: 2px; }
+  .simbol.v svg { transform: rotate(90deg); }
+
+  .frase { margin: 12px 0 0; padding: 12px 14px; border-left: 4px solid var(--blau); background: var(--blau-clar); border-radius: 0 8px 8px 0; min-height: 3.4em; }
+  .frase .av { display: block; margin-top: 6px; color: #b4570a; font-weight: 700; }
+  .llegenda { display: flex; flex-wrap: wrap; gap: 18px; margin: 12px 0 0; font-size: 14px; color: var(--suau); align-items: center; }
+  .llegenda span { display: inline-flex; gap: 6px; align-items: center; }
+  .llegenda svg { width: 26px; height: 26px; }
+  .nota { font-size: 13px; color: var(--suau); margin: 8px 0 0; }
+
+  /* Quadrícula de columnes i files */
+  .quad { }
+  .cel { position: relative; display: flex; align-items: center; justify-content: center; padding: 6px; overflow: hidden;
+    border-right: 2px solid #fff; border-bottom: 2px solid #fff; background: #eef1f6; color: #123; font-size: 13px; }
+  .cel.fixa { background: #ffd9a8; } .cel.auto { background: #bfe6d0; } .cel.resta { background: #bcd1fb; }
+  .cel .dins { background: rgba(255,255,255,.72); border: 1px solid rgba(0,0,0,.25); border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; white-space: nowrap; }
+  .cel .amp { position: absolute; font-weight: 700; font-size: 12px; background: rgba(255,255,255,.8); padding: 0 4px; border-radius: 3px; }
+  .cel .amp.baix { bottom: 3px; left: 50%; transform: translateX(-50%); }
+  .cel .amp.esq { left: 3px; top: 50%; transform: translateY(-50%); }
+  .ordres { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .ordre { border: 1px solid var(--linia); border-radius: 10px; padding: 8px 10px; background: var(--carta); font-size: 14px; min-width: 170px; }
+  .ordre h4 { margin: 0 0 6px; font-size: 14px; }
+  .ordre label { display: block; color: var(--suau); font-size: 13px; margin-top: 4px; }
+  .ordre select, .ordre input[type=number] { font: inherit; font-size: 14px; width: 100%; padding: 4px 6px; border: 1px solid var(--linia); border-radius: 6px; background: var(--carta); color: var(--text); }
+  .notacio { display: grid; gap: 6px; margin: 10px 0 4px; font-size: 15px; }
+  code.n { display: inline-block; min-width: 3.2em; text-align: center; padding: 1px 8px; border-radius: 6px; font: 700 14px ui-monospace, Consolas, monospace; border: 1px solid rgba(0,0,0,.2); color: #123; margin-right: 4px; }
+  code.n-fixa { background: #ffd9a8; } code.n-auto { background: #bfe6d0; } code.n-resta { background: #bcd1fb; }
+  .cont3 { position: relative; width: 560px; height: 200px; border: 1px dashed #8a94a8; background: #fafbfd; overflow: hidden; }
+  .marge3 { position: absolute; background: rgba(240,150,40,.38); }
+  .btn3 { position: absolute; border: 2px solid #5a7fc7; background: rgba(40,170,100,.40); box-sizing: border-box; }
+  .dins3 { position: absolute; background: #fff; border: 1px solid #8aa; font-size: 13px; line-height: 18px; text-align: center; overflow: hidden; white-space: nowrap; color: #123; }
+  .n3 { position: absolute; font: 700 11px/1 ui-monospace, Consolas, monospace; color: #7a3d00; transform: translate(-50%, -50%); pointer-events: none; }
+  .n3.p { color: #0b5a34; }
+  .caixes { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin: 10px 0; }
+  .caixa { border: 1px solid var(--linia); border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+  .caixa h4 { margin: 0 0 6px; font-size: 15px; }
+  .caixa.m h4 { color: #b4570a; } .caixa.p h4 { color: #0b7a47; }
+  .caixa .fila { display: flex; gap: 8px; align-items: center; margin: 2px 0; }
+  .caixa .fila span { width: 4.5em; color: var(--suau); }
+  .caixa .fila input[type=range] { flex: 1; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
+
+  .resum { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
+  .resum .carta h3 { margin: 0 0 4px; font-size: 16px; color: var(--titol); }
+  .resum .carta p { margin: 0; font-size: 14px; color: var(--suau); }
+  input[type=range] { vertical-align: middle; }
+  output { min-width: 3.4em; display: inline-block; font-variant-numeric: tabular-nums; }
+  #prova { font: 12px monospace; white-space: pre-wrap; color: var(--suau); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Ancoratge i creixement</h1>
+    <p class="sub">Què fa un control quan la finestra s'ampla o s'estreny? Ho decideixes tu amb els símbols de les vores, amb les columnes i les files, i amb les mides mínimes.</p>
+  </header>
+
+  <!-- ================= 1. ANCORATGE ================= -->
+  <section id="s1">
+    <h2>1 · Lliga el control a les vores</h2>
+    <p>Això és el que veus al dissenyador de Visual Studio quan tries un control: <strong>quatre línies</strong> que surten dels seus costats cap a les vores de la finestra i, a cada vora, un <strong>símbol</strong>. <strong>Clica els símbols</strong> i després <strong>arrossega l'angle de la finestra</strong> (o fes servir els lliscadors) per veure què fa el control. També pots arrossegar el control. Les mides són en px (píxels, els punts de la pantalla).</p>
+
+    <div class="carta">
+      <div class="eines" id="presets1">
+        <span class="etiqueta">Prova una combinació:</span>
+        <button class="p" data-p="esq-dalt">Esquerra i dalt</button>
+        <button class="p" data-p="dreta-dalt">Dreta i dalt</button>
+        <button class="p" data-p="esq-dreta">Esquerra i dreta</button>
+        <button class="p" data-p="dreta-baix">Dreta i baix</button>
+        <button class="p" data-p="quatre">Les quatre vores</button>
+        <button class="p" data-p="centre">Centrat</button>
+      </div>
+      <div class="eines">
+        <label>Ample de la finestra <input type="range" id="w1" min="160" max="900" value="640"> <output id="w1o"></output></label>
+        <label>Alt <input type="range" id="h1" min="120" max="420" value="300"> <output id="h1o"></output></label>
+        <button class="t" id="reset1">Torna a la mida inicial</button>
+      </div>
+      <div class="eines min">
+        <label><input type="checkbox" id="mf1"> <b>Mida mínima de la finestra</b></label>
+        <label id="mfw1l">ample <input type="range" id="mfw1" min="160" max="700" value="480"> <output id="mfw1o"></output></label>
+        <label id="mfh1l">alt <input type="range" id="mfh1" min="120" max="350" value="240"> <output id="mfh1o"></output></label>
+      </div>
+      <div class="eines min">
+        <label><input type="checkbox" id="mc1"> <b>Mida mínima del control</b> <span style="color:var(--suau)">(només importa quan s'estira)</span></label>
+        <label id="mcw1l">ample <input type="range" id="mcw1" min="0" max="300" value="100"> <output id="mcw1o"></output></label>
+        <label id="mch1l">alt <input type="range" id="mch1" min="0" max="150" value="36"> <output id="mch1o"></output></label>
+      </div>
+
+      <div class="escenari"><div class="finestra" id="fin1">
+        <div class="titol-fin" id="tit1">Finestra</div>
+        <div class="client" id="cli1"></div>
+        <div class="nanses" id="nan1" title="Arrossega per canviar la mida"></div>
+      </div></div>
+
+      <div class="frase" id="frase1" aria-live="polite"></div>
+
+      <div class="llegenda">
+        <span><svg viewBox="0 0 24 24"><use href="#enllac"/></svg> <b>Lligat</b>: el control manté aquesta distància fins a la vora.</span>
+        <span><svg viewBox="0 0 24 24"><use href="#obert"/></svg> <b>Lliure</b>: no hi ha cap distància fixa amb aquesta vora.</span>
+      </div>
+      <p class="nota">Funciona com a Visual Studio: en clicar un símbol, el control <b>no es mou en aquell moment</b>; només canvia què farà quan canviï la mida. Si lligues dues vores oposades, el control <b>s'estira</b>. Si cliques l'únic símbol lligat d'una direcció, l'ancoratge <b>salta a la vora contrària</b>: per deixar-lo centrat has d'usar els botons d'alineació del quadre de propietats (aquí, el botó «Centrat»).</p>
+      <p class="nota"><b>Prova la mida mínima:</b> deixa la finestra sense mínim i fes-la molt petita: el control es talla o desapareix. Marca «Mida mínima de la finestra» i la finestra ja no es podrà fer més petita que això. Marca «Mida mínima del control» i, quan s'estira, no es farà més petit que aquest valor.</p>
+    </div>
+  </section>
+
+  <!-- ================= 2. CREIXEMENT ================= -->
+  <section id="s2">
+    <h2>2 · Com es reparteix l'espai: columnes i files</h2>
+    <p>Un formulari es divideix en <strong>columnes</strong> i <strong>files</strong>, i les dues funcionen igual. Cada columna o fila té una mida que s'escriu de <strong>tres maneres</strong>. Tria si mires les columnes o les files, canvia el valor de cadascuna i estira la finestra.</p>
+    <div class="notacio">
+      <div><code class="n n-fixa">300</code> <b>Un número</b>: mida fixa, sempre aquests px.</div>
+      <div><code class="n n-auto">Auto</code> <b>Auto</b>: només el que necessita el contingut.</div>
+      <div><code class="n n-resta">*</code> <b>Asterisc</b>: reparteix tot l'espai que sobra. <code class="n n-resta">2*</code> n'agafa el doble que <code class="n n-resta">*</code>.</div>
+    </div>
+    <p class="nota" style="margin-top:0">Ho veuràs així al quadre de propietats: a l'<i>Ample</i> de cada columna i a l'<i>Alt</i> de cada fila.</p>
+
+    <div class="carta">
+      <div class="eines" id="presets2">
+        <span class="etiqueta">Exemples:</span>
+        <button class="p" data-p="form-llista">Formulari + llista</button>
+        <button class="p" data-p="titol-contingut-peu">Títol, contingut i peu</button>
+        <button class="p" data-p="etiq-camp-boto">Etiqueta + camp + botó</button>
+        <button class="p" data-p="tres-iguals">Tres iguals</button>
+        <button class="p" data-p="un-dos">Una columna doble</button>
+      </div>
+      <div class="eines" id="eix2">
+        <span class="etiqueta">Què vols veure?</span>
+        <button class="p" data-e="cols">Les columnes</button>
+        <button class="p" data-e="files">Les files</button>
+        <button class="t" id="afegeix2"></button>
+        <button class="t" id="treu2"></button>
+      </div>
+      <div class="eines">
+        <label>Ample de la finestra <input type="range" id="w2" min="160" max="900" value="640"> <output id="w2o"></output></label>
+        <label>Alt <input type="range" id="h2" min="120" max="420" value="300"> <output id="h2o"></output></label>
+      </div>
+      <div class="eines min">
+        <label><input type="checkbox" id="mf2"> <b>Mida mínima de la finestra</b></label>
+        <label id="mfw2l">ample <input type="range" id="mfw2" min="160" max="700" value="480"> <output id="mfw2o"></output></label>
+        <label id="mfh2l">alt <input type="range" id="mfh2" min="120" max="350" value="240"> <output id="mfh2o"></output></label>
+      </div>
+
+      <div class="escenari"><div class="finestra" id="fin2">
+        <div class="titol-fin" id="tit2">Finestra</div>
+        <div class="client" id="cli2"><div class="quad" id="quad"></div></div>
+        <div class="nanses" id="nan2" title="Arrossega per canviar la mida"></div>
+      </div></div>
+
+      <div class="ordres" id="ordres"></div>
+      <div class="frase" id="frase2" aria-live="polite"></div>
+      <div class="llegenda">
+        <span><code class="n n-fixa">300</code> sempre els mateixos px</span>
+        <span><code class="n n-auto">Auto</code> tant com el contingut</span>
+        <span><code class="n n-resta">*</code> <code class="n n-resta">2*</code> creix i decreix amb la finestra</span>
+      </div>
+      <p class="nota">Prova «Títol, contingut i peu»: és la disposició de l'examen. El títol i el peu són files <code class="n n-auto">Auto</code>, i la fila del mig és <code class="n n-resta">*</code> (agafa tot el que sobra); el formulari és una columna <code class="n n-fixa">300</code> i la llista, una columna <code class="n n-resta">*</code>.</p>
+    </div>
+  </section>
+
+  <!-- ================= 3. MARGIN I PADDING ================= -->
+  <section id="s3">
+    <h2>3 · L'espai de fora i l'espai de dins: Margin i Padding</h2>
+    <p>Són dues maneres de deixar aire. <strong>Margin</strong> (marge) és l'espai <strong>de fora</strong> del control: entre ell i el que té al costat, o la vora del contenidor. <strong>Padding</strong> (separació interna) és l'espai <strong>de dins</strong>: entre la vora del control i el seu contingut. Els números que veies a la secció 1 (93, 60…) són precisament els <strong>Margin</strong>.</p>
+
+    <div class="carta">
+      <div class="eines" id="presets3">
+        <span class="etiqueta">Prova:</span>
+        <button class="p" data-p="cap">Sense espais</button>
+        <button class="p" data-p="marge">Només Margin</button>
+        <button class="p" data-p="padding">Només Padding</button>
+        <button class="p" data-p="tots">Margin i Padding</button>
+        <label style="margin-left:12px"><input type="checkbox" id="est3"> Estira els botons (cada un ocupa la meitat de l'ample)</label>
+      </div>
+
+      <div class="caixes">
+        <div class="caixa m">
+          <h4>Margin · fora del control</h4>
+          <label><input type="checkbox" id="mu3" checked> Els quatre costats iguals</label>
+          <div class="fila"><span>Esquerra</span><input type="range" id="m3l" min="0" max="40" value="10"><output id="m3lo"></output></div>
+          <div class="fila"><span>Dalt</span><input type="range" id="m3t" min="0" max="40" value="10"><output id="m3to"></output></div>
+          <div class="fila"><span>Dreta</span><input type="range" id="m3r" min="0" max="40" value="10"><output id="m3ro"></output></div>
+          <div class="fila"><span>Baix</span><input type="range" id="m3b" min="0" max="40" value="10"><output id="m3bo"></output></div>
+        </div>
+        <div class="caixa p">
+          <h4>Padding · dins del control</h4>
+          <label><input type="checkbox" id="pu3" checked> Els quatre costats iguals</label>
+          <div class="fila"><span>Esquerra</span><input type="range" id="p3l" min="0" max="40" value="8"><output id="p3lo"></output></div>
+          <div class="fila"><span>Dalt</span><input type="range" id="p3t" min="0" max="40" value="8"><output id="p3to"></output></div>
+          <div class="fila"><span>Dreta</span><input type="range" id="p3r" min="0" max="40" value="8"><output id="p3ro"></output></div>
+          <div class="fila"><span>Baix</span><input type="range" id="p3b" min="0" max="40" value="8"><output id="p3bo"></output></div>
+        </div>
+      </div>
+
+      <div class="escenari"><div class="cont3" id="cont3"></div></div>
+
+      <div class="frase" id="frase3" aria-live="polite"></div>
+      <div class="llegenda">
+        <span><i class="dot" style="background:rgba(240,150,40,.7)"></i> <b>Margin</b>: espai de fora</span>
+        <span><i class="dot" style="background:rgba(40,170,100,.7)"></i> <b>Padding</b>: espai de dins</span>
+        <span><i class="dot" style="background:#fff;border:1px solid #8aa"></i> el contingut</span>
+      </div>
+      <p class="nota"><b>On existeix cada cosa:</b> el <b>Margin</b> el tenen tots els controls. El <b>Padding</b> el tenen els botons, els quadres de text, les etiquetes i el <i>Border</i>; <i>Grid</i> i <i>StackPanel</i> no en tenen (per deixar aire dins d'un panell, posa-li un <i>Margin</i> als controls o envolta'l amb un <i>Border</i>). Entre dos controls veïns, la distància és la suma del Margin dret del primer i el Margin esquerre del segon.</p>
+    </div>
+  </section>
+
+  <!-- ================= 4. PER RECORDAR ================= -->
+  <section>
+    <h2>Per recordar</h2>
+    <div class="resum">
+      <div class="carta"><h3>Vols que el control creixi?</h3><p>Lliga'l a <b>dues vores oposades</b> i posa'l en una columna o fila <code class="n n-resta">*</code>.</p></div>
+      <div class="carta"><h3>Vols que es quedi a un cantó?</h3><p>Lliga'l a <b>una sola vora</b>. Mantindrà la distància i la seva mida.</p></div>
+      <div class="carta"><h3>Vols una part fixa?</h3><p>Una columna o fila amb un <b>número</b> (per exemple <code class="n n-fixa">300</code>) no canvia mai; les <code class="n n-resta">*</code> s'adapten, i les <code class="n n-auto">Auto</code> s'ajusten al contingut.</p></div>
+      <div class="carta"><h3>Vols aire entre els controls?</h3><p><b>Margin</b> deixa espai <b>fora</b> (entre controls); <b>Padding</b> en deixa <b>dins</b> (entre la vora i el text).</p></div>
+      <div class="carta"><h3>Vols que res es talli?</h3><p>Posa una <b>mida mínima a la finestra</b>: no es podrà fer més petita. I, si un control s'estira, una <b>mida mínima al control</b> evita que quedi massa petit.</p></div>
+    </div>
+  </section>
+
+  <p id="prova"></p>
+</main>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- enllaç tancat: dues baules unides (lligat) -->
+    <symbol id="enllac" viewBox="0 0 24 24">
+      <rect x="2.5" y="8" width="12" height="8" rx="4" fill="none" stroke="#2f6fed" stroke-width="2.2"/>
+      <rect x="9.5" y="8" width="12" height="8" rx="4" fill="none" stroke="#2f6fed" stroke-width="2.2"/>
+    </symbol>
+    <!-- enllaç obert: dues baules separades (lliure) -->
+    <symbol id="obert" viewBox="0 0 24 24">
+      <path d="M10 8 H6.5 a4 4 0 0 0 0 8 H10" fill="none" stroke="#1b2330" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M14 8 H17.5 a4 4 0 0 1 0 8 H14" fill="none" stroke="#1b2330" stroke-width="2.4" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+/* ---------- Mètode comú: com es col·loca un control en una direcció ---------- */
+// a1 = lligat a la vora d'inici (esquerra o dalt), a2 = lligat a la vora final (dreta o baix); min = mida mínima del control
+function colloca(total, e, min) {
+  min = min || 0;
+  if (e.a1 && e.a2) { return { pos: e.d1, mida: Math.max(min, total - e.d1 - e.d2, 0) }; }
+  if (e.a1)         { return { pos: e.d1, mida: e.S }; }
+  if (e.a2)         { return { pos: total - e.d2 - e.S, mida: e.S }; }
+  return { pos: (total - e.S) / 2 + e.c, mida: e.S };
+}
+// Congela l'estat actual (el control no es mou en tocar un símbol) i aplica els nous ancoratges.
+function fixa(total, e, a1, a2, min) {
+  const cur = colloca(total, e, min);
+  return { a1, a2, S: cur.mida, d1: Math.round(cur.pos), d2: Math.round(total - cur.pos - cur.mida), c: Math.round(cur.pos - (total - cur.mida) / 2) };
+}
+// Què passa en clicar el símbol de la vora «costat» (1 = inici, 2 = final), com a Visual Studio.
+function clica(total, e, costat, min) {
+  const lligat = costat === 1 ? e.a1 : e.a2;
+  const altre = costat === 1 ? e.a2 : e.a1;
+  if (!lligat) { return costat === 1 ? fixa(total, e, true, altre, min) : fixa(total, e, altre, true, min); }      // lliure -> es lliga
+  if (altre)   { return costat === 1 ? fixa(total, e, false, true, min) : fixa(total, e, true, false, min); }     // dos lligats -> es deslliga aquest
+  return costat === 1 ? fixa(total, e, false, true, min) : fixa(total, e, true, false, min);                       // l'únic lligat -> salta a la contrària
+}
+
+/* ---------- Mida de la finestra, amb mínim opcional (comú a les dues seccions) ---------- */
+function limitsFinestra(sec) {
+  return { wMin: sec.minF.on ? sec.minF.w : 160, wMax: 900, hMin: sec.minF.on ? sec.minF.h : 120, hMax: 420 };
+}
+function fixaMida(sec, W, H) {
+  const l = limitsFinestra(sec);
+  sec.W = clamp(Math.round(W), l.wMin, l.wMax);
+  sec.H = clamp(Math.round(H), l.hMin, l.hMax);
+}
+function einesFinestra(n, sec) {
+  const l = limitsFinestra(sec);
+  $('w' + n).min = l.wMin; $('w' + n).value = sec.W; $('w' + n + 'o').textContent = sec.W + ' px';
+  $('h' + n).min = l.hMin; $('h' + n).value = sec.H; $('h' + n + 'o').textContent = sec.H + ' px';
+  $('mf' + n).checked = sec.minF.on;
+  $('mfw' + n).value = sec.minF.w; $('mfw' + n + 'o').textContent = sec.minF.w + ' px';
+  $('mfh' + n).value = sec.minF.h; $('mfh' + n + 'o').textContent = sec.minF.h + ' px';
+  $('mfw' + n + 'l').classList.toggle('apagat', !sec.minF.on); $('mfh' + n + 'l').classList.toggle('apagat', !sec.minF.on);
+  $('tit' + n).innerHTML = 'Finestra' + (sec.minF.on ? ` &nbsp;·&nbsp; <b>mínim ${sec.minF.w} × ${sec.minF.h} px</b>` : '');
+}
+function connectaMinFinestra(n, sec, repinta) {
+  const aplica = () => { sec.minF.on = $('mf' + n).checked; sec.minF.w = +$('mfw' + n).value; sec.minF.h = +$('mfh' + n).value; fixaMida(sec, sec.W, sec.H); repinta(); };
+  ['mf', 'mfw', 'mfh'].forEach(p => $(p + n).addEventListener('input', aplica));
+}
+
+/* ---------- Secció 1 ---------- */
+const SEC1 = { W: 640, H: 300, x: null, y: null, minF: { on: false, w: 480, h: 240 }, minC: { on: false, w: 100, h: 36 }, preset: null };
+const CW = 130, CH = 44;
+const minCtl = () => ({ x: SEC1.minC.on ? SEC1.minC.w : 0, y: SEC1.minC.on ? SEC1.minC.h : 0 });
+function iniciEix(total, pos, mida, a1, a2) { return fixa(total, { a1: true, a2: false, S: mida, d1: pos, d2: 0, c: 0 }, a1, a2, 0); }
+function preset1(nom) {
+  SEC1.W = 640; SEC1.H = 300;
+  const m = { 'esq-dalt': [1,0,1,0], 'dreta-dalt': [0,1,1,0], 'esq-dreta': [1,1,1,0], 'dreta-baix': [0,1,0,1], 'quatre': [1,1,1,1], 'centre': [0,0,0,0] }[nom];
+  const sx = (nom === 'quatre' || nom === 'esq-dreta') ? 300 : CW;
+  const sy = (nom === 'quatre') ? 150 : CH;
+  let ax = 90, ay = 60;
+  if (nom === 'dreta-dalt' || nom === 'dreta-baix') { ax = SEC1.W - 90 - CW; }
+  if (nom === 'dreta-baix') { ay = SEC1.H - 60 - CH; }
+  if (nom === 'centre') { ax = (SEC1.W - CW) / 2; ay = (SEC1.H - CH) / 2; }
+  SEC1.x = iniciEix(SEC1.W, ax, sx, !!m[0], !!m[1]);
+  SEC1.y = iniciEix(SEC1.H, ay, sy, !!m[2], !!m[3]);
+  fixaMida(SEC1, SEC1.W, SEC1.H);
+  SEC1.preset = nom;
+}
+function frase1() {
+  const x = SEC1.x, y = SEC1.y, mc = minCtl();
+  const X = colloca(SEC1.W, x, mc.x), Y = colloca(SEC1.H, y, mc.y);
+  let h, v;
+  if (x.a1 && x.a2) { h = `s'estira en amplada: manté <b>${x.d1} px</b> a l'esquerra i <b>${x.d2} px</b> a la dreta`; if (mc.x > 0 && SEC1.W - x.d1 - x.d2 <= mc.x) h += `; ara ha arribat a la seva <b>mida mínima</b> (${mc.x} px) i no pot encongir més`; }
+  else if (x.a1)  h = `es queda a <b>${x.d1} px</b> de l'esquerra i no canvia d'ample (${x.S} px)`;
+  else if (x.a2)  h = `es queda a <b>${x.d2} px</b> de la dreta i no canvia d'ample (${x.S} px)`;
+  else            h = `es queda al mig, en horitzontal, i no canvia d'ample (${x.S} px)`;
+  if (y.a1 && y.a2) { v = `s'estira en alçada: manté <b>${y.d1} px</b> a dalt i <b>${y.d2} px</b> a baix`; if (mc.y > 0 && SEC1.H - y.d1 - y.d2 <= mc.y) v += `; ara ha arribat a la seva <b>mida mínima</b> (${mc.y} px) i no pot encongir més`; }
+  else if (y.a1)  v = `a <b>${y.d1} px</b> de dalt, sense canviar d'alçada (${y.S} px)`;
+  else if (y.a2)  v = `a <b>${y.d2} px</b> de baix, sense canviar d'alçada (${y.S} px)`;
+  else            v = `al mig, en vertical, sense canviar d'alçada (${y.S} px)`;
+  let av = '';
+  if (X.mida <= 0 || Y.mida <= 0) av = `<span class="av">El control ha desaparegut (mesura 0 px). Una mida mínima ho evitaria.</span>`;
+  else if (X.pos < 0 || X.pos + X.mida > SEC1.W || Y.pos < 0 || Y.pos + Y.mida > SEC1.H) av = `<span class="av">El control ja no hi cap i es talla per la vora de la finestra.</span>`;
+  return `Quan canviïs la mida de la finestra, el control ${h}; i en vertical, ${v}.${av}`;
+}
+function marcaPreset(id, nom) { document.querySelectorAll('#' + id + ' .p').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.p === nom))); }
+function pinta1() {
+  const cli = $('cli1');
+  cli.style.width = SEC1.W + 'px'; cli.style.height = SEC1.H + 'px';
+  const mc = minCtl();
+  const X = colloca(SEC1.W, SEC1.x, mc.x), Y = colloca(SEC1.H, SEC1.y, mc.y);
+  const l = X.pos, t = Y.pos, w = X.mida, h = Y.mida, r = l + w, b = t + h, cx = l + w / 2, cy = t + h / 2;
+  const sx = SEC1.x, sy = SEC1.y;
+  cli.innerHTML = '';
+  const dib = (cls, css, txt) => { const d = document.createElement('div'); d.className = cls; Object.assign(d.style, css); if (txt !== undefined) d.textContent = txt; cli.appendChild(d); return d; };
+  const ctl = dib('control', { left: l + 'px', top: t + 'px', width: w + 'px', height: h + 'px' }, w > 40 ? 'Botó' : '');
+  ctl.id = 'ctl1';
+  const linia = (cls, css) => dib('linia ' + cls, css);
+  const simbol = (cls, x, y, lligat, costat, eix, text) => {
+    const bt = document.createElement('button'); bt.className = 'simbol ' + cls; bt.style.left = x + 'px'; bt.style.top = y + 'px';
+    bt.setAttribute('aria-label', text + (lligat ? ' (lligat; clica per canviar)' : ' (lliure; clica per lligar)'));
+    bt.title = lligat ? 'Lligat: clica per canviar' : 'Lliure: clica per lligar';
+    bt.innerHTML = `<svg viewBox="0 0 24 24"><use href="#${lligat ? 'enllac' : 'obert'}"/></svg>`;
+    bt.addEventListener('click', () => {
+      const m = minCtl();
+      if (eix === 'x') SEC1.x = clica(SEC1.W, SEC1.x, costat, m.x); else SEC1.y = clica(SEC1.H, SEC1.y, costat, m.y);
+      marcaPreset('presets1', null); pinta1();
+    });
+    cli.appendChild(bt); return bt;
+  };
+  // esquerra
+  linia(sx.a1 ? 'h' : 'h lliure', { left: '8px', width: Math.max(0, l - 8) + 'px', top: cy + 'px' });
+  if (sx.a1 && l > 40) dib('num', { left: (8 + l) / 2 + 'px', top: cy + 'px' }, sx.d1);
+  simbol('h', 14, cy, sx.a1, 1, 'x', 'Vora esquerra');
+  // dreta
+  linia(sx.a2 ? 'h' : 'h lliure', { left: Math.max(0, r) + 'px', width: Math.max(0, SEC1.W - 8 - r) + 'px', top: cy + 'px' });
+  if (sx.a2 && SEC1.W - r > 40) dib('num', { left: (r + SEC1.W - 8) / 2 + 'px', top: cy + 'px' }, sx.d2);
+  simbol('h', SEC1.W - 14, cy, sx.a2, 2, 'x', 'Vora dreta');
+  // dalt
+  linia(sy.a1 ? 'v' : 'v lliure', { top: '8px', height: Math.max(0, t - 8) + 'px', left: cx + 'px' });
+  if (sy.a1 && t > 30) dib('num', { left: cx + 'px', top: (8 + t) / 2 + 'px' }, sy.d1);
+  simbol('v', cx, 14, sy.a1, 1, 'y', 'Vora de dalt');
+  // baix
+  linia(sy.a2 ? 'v' : 'v lliure', { top: Math.max(0, b) + 'px', height: Math.max(0, SEC1.H - 8 - b) + 'px', left: cx + 'px' });
+  if (sy.a2 && SEC1.H - b > 30) dib('num', { left: cx + 'px', top: (b + SEC1.H - 8) / 2 + 'px' }, sy.d2);
+  simbol('v', cx, SEC1.H - 14, sy.a2, 2, 'y', 'Vora de baix');
+  einesFinestra(1, SEC1);
+  $('mc1').checked = SEC1.minC.on;
+  $('mcw1').value = SEC1.minC.w; $('mcw1o').textContent = SEC1.minC.w + ' px';
+  $('mch1').value = SEC1.minC.h; $('mch1o').textContent = SEC1.minC.h + ' px';
+  $('mcw1l').classList.toggle('apagat', !SEC1.minC.on); $('mch1l').classList.toggle('apagat', !SEC1.minC.on);
+  $('frase1').innerHTML = frase1();
+  activaArrossegaControl(ctl);
+}
+function activaArrossegaControl(ctl) {
+  let inici = null;
+  ctl.addEventListener('pointerdown', e => {
+    ctl.setPointerCapture(e.pointerId); ctl.classList.add('arrossegant');
+    inici = { mx: e.clientX, my: e.clientY, x: { ...SEC1.x }, y: { ...SEC1.y } };
+  });
+  ctl.addEventListener('pointermove', e => {
+    if (!inici) return;
+    const dx = Math.round(e.clientX - inici.mx), dy = Math.round(e.clientY - inici.my);
+    const nx = { ...inici.x }, ny = { ...inici.y };
+    if (nx.a1 && !nx.a2) nx.d1 = inici.x.d1 + dx; else if (!nx.a1 && nx.a2) nx.d2 = inici.x.d2 - dx; else if (!nx.a1 && !nx.a2) nx.c = inici.x.c + dx;
+    if (ny.a1 && !ny.a2) ny.d1 = inici.y.d1 + dy; else if (!ny.a1 && ny.a2) ny.d2 = inici.y.d2 - dy; else if (!ny.a1 && !ny.a2) ny.c = inici.y.c + dy;
+    const mc = minCtl(), X = colloca(SEC1.W, nx, mc.x), Y = colloca(SEC1.H, ny, mc.y);
+    if (X.pos >= 0 && X.pos + X.mida <= SEC1.W && Y.pos >= 0 && Y.pos + Y.mida <= SEC1.H) {
+      SEC1.x = nx; SEC1.y = ny; pinta1(); const n = $('ctl1'); n.setPointerCapture(e.pointerId); n.classList.add('arrossegant');
+    }
+  });
+  const fi = () => { inici = null; ctl.classList.remove('arrossegant'); };
+  ctl.addEventListener('pointerup', fi); ctl.addEventListener('pointercancel', fi);
+}
+function arrossegaFinestra(nanses, cb) {
+  nanses.addEventListener('pointerdown', e => {
+    nanses.setPointerCapture(e.pointerId);
+    const ix = e.clientX, iy = e.clientY, c = cb.inici();
+    const mou = ev => cb.mou(c, ev.clientX - ix, ev.clientY - iy);
+    const fi = () => { nanses.removeEventListener('pointermove', mou); nanses.removeEventListener('pointerup', fi); nanses.removeEventListener('pointercancel', fi); };
+    nanses.addEventListener('pointermove', mou); nanses.addEventListener('pointerup', fi); nanses.addEventListener('pointercancel', fi);
+  });
+}
+
+/* ---------- Secció 2: columnes i files ---------- */
+const AUTO_COL = 90, AUTO_FILA = 40;
+const SEC2 = { W: 640, H: 300, eix: 'cols', cols: [], rows: [], minF: { on: false, w: 480, h: 240 } };
+// Mida de cada columna (o fila): primer les fixes i les «només el que cal»; la resta es reparteix segons el pes.
+function reparteix(total, defs, auto) {
+  const ocupat = defs.reduce((s, c) => s + (c.tipus === 'fixa' ? c.px : c.tipus === 'auto' ? auto : 0), 0);
+  const sobra = Math.max(0, total - ocupat);
+  const pesos = defs.reduce((s, c) => s + (c.tipus === 'resta' ? c.pes : 0), 0);
+  return defs.map(c => c.tipus === 'fixa' ? c.px : c.tipus === 'auto' ? auto : (pesos ? sobra * c.pes / pesos : 0));
+}
+const F = (tipus, px, pes) => ({ tipus, px: px || 100, pes: pes || 1 });
+const PRESETS2 = {
+  'form-llista':         { eix: 'cols',  cols: [F('fixa', 300), F('resta')], rows: [F('resta')] },
+  'titol-contingut-peu': { eix: 'files', cols: [F('fixa', 300), F('resta')], rows: [F('auto'), F('resta'), F('auto')] },
+  'etiq-camp-boto':      { eix: 'cols',  cols: [F('auto'), F('resta'), F('auto')], rows: [F('resta')] },
+  'tres-iguals':         { eix: 'cols',  cols: [F('resta'), F('resta'), F('resta')], rows: [F('resta')] },
+  'un-dos':              { eix: 'cols',  cols: [F('resta'), F('resta', 100, 2)], rows: [F('resta')] },
+};
+function preset2(nom) {
+  const p = PRESETS2[nom];
+  SEC2.eix = p.eix; SEC2.cols = p.cols.map(c => ({ ...c })); SEC2.rows = p.rows.map(c => ({ ...c }));
+  fixaMida(SEC2, 640, 300);
+}
+const NOMS_TIPUS = { fixa: 'Un número (mida fixa)', auto: 'Auto (el que cal)', resta: '* (reparteix el que sobra)' };
+// Notació que es veu a Propiedades: un número, Auto, * o 2*, 3*…
+const notacio = c => c.tipus === 'fixa' ? String(c.px) : c.tipus === 'auto' ? 'Auto' : (c.pes === 1 ? '*' : c.pes + '*');
+const COLOR_TIPUS = { fixa: '#ffd9a8', auto: '#bfe6d0', resta: '#bcd1fb' };
+function defsActius() { return SEC2.eix === 'cols' ? SEC2.cols : SEC2.rows; }
+function frase2(mides) {
+  const cols = SEC2.eix === 'cols', defs = defsActius(), total = cols ? SEC2.W : SEC2.H, auto = cols ? AUTO_COL : AUTO_FILA;
+  const nom = cols ? 'columna' : 'fila', dim = cols ? 'ample' : 'alçada';
+  const parts = defs.map((c, i) => {
+    const m = Math.round(mides[i]);
+    const n = `<code class="n n-${c.tipus}">${notacio(c)}</code>`;
+    if (c.tipus === 'fixa') return `la ${nom} ${i + 1} (${n}) fa sempre <b>${c.px} px</b>`;
+    if (c.tipus === 'auto') return `la ${nom} ${i + 1} (${n}) fa <b>${m} px</b>, el que necessita el contingut`;
+    return `la ${nom} ${i + 1} (${n}) ocupa <b>${m} px</b>, ${c.pes === 1 ? 'una part' : c.pes + ' parts'} de l'espai que sobra`;
+  });
+  const ocupat = defs.reduce((s, c) => s + (c.tipus === 'fixa' ? c.px : c.tipus === 'auto' ? auto : 0), 0);
+  let av = '';
+  if (ocupat > total) av = `<span class="av">No hi caben: entre els números i les <code class="n n-auto">Auto</code> sumen ${ocupat} px i la finestra en té ${total}. Una part es talla. Una mida mínima a la finestra ho evitaria.</span>`;
+  else if (!defs.some(c => c.tipus === 'resta')) av = `<span class="av">Cap ${nom} és <code class="n n-resta">*</code>: si la finestra creix, apareix un buit.</span>`;
+  return `Amb ${dim} de la finestra a ${total} px: ${parts.join('; ')}.${av}`;
+}
+function pinta2() {
+  const cols = SEC2.eix === 'cols';
+  const amples = reparteix(SEC2.W, SEC2.cols, AUTO_COL), altes = reparteix(SEC2.H, SEC2.rows, AUTO_FILA);
+  const cli = $('cli2'); cli.style.width = SEC2.W + 'px'; cli.style.height = SEC2.H + 'px';
+  const q = $('quad');
+  q.style.cssText = `display:grid;width:${SEC2.W}px;height:${SEC2.H}px;grid-template-columns:${amples.map(a => a + 'px').join(' ')};grid-template-rows:${altes.map(a => a + 'px').join(' ')}`;
+  q.innerHTML = '';
+  SEC2.rows.forEach((fila, r) => SEC2.cols.forEach((col, c) => {
+    const cel = document.createElement('div');
+    const actiu = cols ? col : fila;
+    cel.className = 'cel ' + actiu.tipus;
+    const d = document.createElement('div'); d.className = 'dins';
+    d.textContent = (col.tipus === 'auto' || fila.tipus === 'auto') ? 'contingut' : 'control';
+    d.style.width = col.tipus === 'auto' ? Math.max(20, AUTO_COL - 20) + 'px' : '100%';
+    d.style.height = fila.tipus === 'auto' ? Math.max(14, AUTO_FILA - 20) + 'px' : '100%';
+    cel.appendChild(d);
+    if (cols && r === SEC2.rows.length - 1) { const a = document.createElement('div'); a.className = 'amp baix'; a.textContent = notacio(col) + (col.tipus === 'fixa' ? '' : ' = ' + Math.round(amples[c]) + ' px'); cel.appendChild(a); }
+    if (!cols && c === 0) { const a = document.createElement('div'); a.className = 'amp esq'; a.textContent = notacio(fila) + (fila.tipus === 'fixa' ? '' : ' = ' + Math.round(altes[r]) + ' px'); cel.appendChild(a); }
+    q.appendChild(cel);
+  }));
+  // controls de la columna / fila triada
+  const defs = defsActius(), nom = cols ? 'Columna' : 'Fila';
+  const ord = $('ordres'); ord.innerHTML = '';
+  defs.forEach((c, i) => {
+    const d = document.createElement('div'); d.className = 'ordre';
+    d.innerHTML = `<h4><code class="n n-${c.tipus}">${notacio(c)}</code> ${nom} ${i + 1}</h4>
+      <select aria-label="Tipus de la ${nom.toLowerCase()} ${i + 1}">${Object.keys(NOMS_TIPUS).map(k => `<option value="${k}"${k === c.tipus ? ' selected' : ''}>${NOMS_TIPUS[k]}</option>`).join('')}</select>
+      ${c.tipus === 'fixa' ? `<label>Número (px)<input type="number" min="20" max="600" step="10" value="${c.px}"></label>` : ''}
+      ${c.tipus === 'resta' ? `<label>Quant d'espai<select class="pes">${[1, 2, 3, 4].map(n => `<option value="${n}"${n === c.pes ? ' selected' : ''}>${n === 1 ? '*' : n + '*'}</option>`).join('')}</select></label>` : ''}`;
+    d.querySelector('select').addEventListener('change', e => { c.tipus = e.target.value; marcaPreset('presets2', null); pinta2(); });
+    const num = d.querySelector('input[type=number]'); if (num) num.addEventListener('change', e => { c.px = clamp(+e.target.value || 20, 20, 600); marcaPreset('presets2', null); pinta2(); });
+    const pes = d.querySelector('select.pes'); if (pes) pes.addEventListener('change', e => { c.pes = +e.target.value; marcaPreset('presets2', null); pinta2(); });
+    ord.appendChild(d);
+  });
+  document.querySelectorAll('#eix2 [data-e]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.e === SEC2.eix)));
+  $('afegeix2').textContent = cols ? '+ Afegeix columna' : '+ Afegeix fila';
+  $('treu2').textContent = cols ? '− Treu l\'última columna' : '− Treu l\'última fila';
+  einesFinestra(2, SEC2);
+  $('frase2').innerHTML = frase2(reparteix(cols ? SEC2.W : SEC2.H, defs, cols ? AUTO_COL : AUTO_FILA));
+}
+
+/* ---------- Connexions ---------- */
+document.querySelectorAll('#presets1 .p').forEach(b => b.addEventListener('click', () => { preset1(b.dataset.p); marcaPreset('presets1', b.dataset.p); pinta1(); }));
+document.querySelectorAll('#presets2 .p').forEach(b => b.addEventListener('click', () => { preset2(b.dataset.p); marcaPreset('presets2', b.dataset.p); pinta2(); }));
+document.querySelectorAll('#eix2 [data-e]').forEach(b => b.addEventListener('click', () => { SEC2.eix = b.dataset.e; pinta2(); }));
+$('w1').addEventListener('input', e => { fixaMida(SEC1, +e.target.value, SEC1.H); pinta1(); });
+$('h1').addEventListener('input', e => { fixaMida(SEC1, SEC1.W, +e.target.value); pinta1(); });
+$('reset1').addEventListener('click', () => { fixaMida(SEC1, 640, 300); pinta1(); });
+$('w2').addEventListener('input', e => { fixaMida(SEC2, +e.target.value, SEC2.H); pinta2(); });
+$('h2').addEventListener('input', e => { fixaMida(SEC2, SEC2.W, +e.target.value); pinta2(); });
+$('afegeix2').addEventListener('click', () => { const d = defsActius(); if (d.length < 5) { d.push(F('resta')); marcaPreset('presets2', null); pinta2(); } });
+$('treu2').addEventListener('click', () => { const d = defsActius(); if (d.length > 1) { d.pop(); marcaPreset('presets2', null); pinta2(); } });
+['mc1', 'mcw1', 'mch1'].forEach(id => $(id).addEventListener('input', () => { SEC1.minC.on = $('mc1').checked; SEC1.minC.w = +$('mcw1').value; SEC1.minC.h = +$('mch1').value; pinta1(); }));
+connectaMinFinestra(1, SEC1, () => pinta1());
+connectaMinFinestra(2, SEC2, () => pinta2());
+arrossegaFinestra($('nan1'), { inici: () => ({ W: SEC1.W, H: SEC1.H }), mou: (c, dx, dy) => { fixaMida(SEC1, c.W + dx, c.H + dy); pinta1(); } });
+arrossegaFinestra($('nan2'), { inici: () => ({ W: SEC2.W, H: SEC2.H }), mou: (c, dx, dy) => { fixaMida(SEC2, c.W + dx, c.H + dy); pinta2(); } });
+
+
+/* ---------- Secció 3: Margin i Padding ---------- */
+const BORDE = 2, CONT3 = { W: 560, H: 200 }, TXT_ALT = 20;
+const BOTONS3 = [{ txt: 'Desa', cw: 50 }, { txt: 'Cancel·la', cw: 86 }];
+const SEC3 = { m: { l: 10, t: 10, r: 10, b: 10 }, p: { l: 8, t: 8, r: 8, b: 8 }, uni: { m: true, p: true }, estira: false };
+// Mides i posicions dels botons: la mida del botó inclou la vora i el padding; el margin queda fora.
+function capsa3(s) {
+  const n = BOTONS3.length; let x = 0;
+  return BOTONS3.map((b, i) => {
+    const h = TXT_ALT + s.p.t + s.p.b + 2 * BORDE;
+    let w = b.cw + s.p.l + s.p.r + 2 * BORDE, bx;
+    if (s.estira) { const caseta = CONT3.W / n; w = Math.max(0, caseta - s.m.l - s.m.r); bx = i * caseta + s.m.l; }
+    else { bx = x + s.m.l; x = bx + w + s.m.r; }
+    return { txt: b.txt, cw: b.cw, x: bx, y: s.m.t, w, h };
+  });
+}
+const PRESETS3 = {
+  cap: { m: 0, p: 0 }, marge: { m: 16, p: 0 }, padding: { m: 0, p: 16 }, tots: { m: 12, p: 12 },
+};
+function pinta3() {
+  const s = SEC3, c = $('cont3'); c.innerHTML = '';
+  const bs = capsa3(s);
+  const dib = (cls, css, txt, pare) => { const d = document.createElement('div'); d.className = cls; Object.assign(d.style, css); if (txt !== undefined) d.textContent = txt; (pare || c).appendChild(d); return d; };
+  bs.forEach(b => {
+    dib('marge3', { left: b.x - s.m.l + 'px', top: '0px', width: b.w + s.m.l + s.m.r + 'px', height: b.h + s.m.t + s.m.b + 'px' });
+    if (s.m.l >= 12) dib('n3', { left: b.x - s.m.l / 2 + 'px', top: s.m.t + b.h / 2 + 'px' }, s.m.l);
+    if (s.m.r >= 12) dib('n3', { left: b.x + b.w + s.m.r / 2 + 'px', top: s.m.t + b.h / 2 + 'px' }, s.m.r);
+    if (s.m.t >= 12) dib('n3', { left: b.x + b.w / 2 + 'px', top: s.m.t / 2 + 'px' }, s.m.t);
+    if (s.m.b >= 12) dib('n3', { left: b.x + b.w / 2 + 'px', top: s.m.t + b.h + s.m.b / 2 + 'px' }, s.m.b);
+    const bt = dib('btn3', { left: b.x + 'px', top: b.y + 'px', width: b.w + 'px', height: b.h + 'px' });
+    bt.dataset.btn = b.txt;
+    const dx = BORDE + s.p.l, dy = BORDE + s.p.t;
+    const cw = s.estira ? Math.max(0, Math.min(b.cw, b.w - 2 * BORDE - s.p.l - s.p.r)) : b.cw;
+    const dx2 = s.estira ? BORDE + s.p.l + Math.max(0, (b.w - 2 * BORDE - s.p.l - s.p.r - cw) / 2) : dx;
+    dib('dins3', { left: dx2 - BORDE + 'px', top: dy - BORDE + 'px', width: cw + 'px', height: TXT_ALT + 'px' }, b.txt, bt);
+    if (s.p.l >= 12) dib('n3 p', { left: BORDE + s.p.l / 2 - BORDE + 'px', top: b.h / 2 - BORDE + 'px' }, s.p.l, bt);
+    if (s.p.r >= 12) dib('n3 p', { left: b.w - 2 * BORDE - s.p.r / 2 + 'px', top: b.h / 2 - BORDE + 'px' }, s.p.r, bt);
+    if (s.p.t >= 12) dib('n3 p', { left: (b.w - 2 * BORDE) / 2 + 'px', top: s.p.t / 2 + 'px' }, s.p.t, bt);
+    if (s.p.b >= 12) dib('n3 p', { left: (b.w - 2 * BORDE) / 2 + 'px', top: b.h - 2 * BORDE - s.p.b / 2 + 'px' }, s.p.b, bt);
+  });
+  ['m', 'p'].forEach(g => ['l', 't', 'r', 'b'].forEach(k => { $(g + '3' + k).value = s[g][k]; $(g + '3' + k + 'o').textContent = s[g][k] + ' px'; }));
+  $('mu3').checked = s.uni.m; $('pu3').checked = s.uni.p; $('est3').checked = s.estira;
+  const a = bs[0], b2 = bs[1];
+  let f = '';
+  if (s.estira) {
+    f = `Amb els botons estirats, cada un ocupa la meitat de l'ample (${CONT3.W / 2} px) <b>menys els seus Margin</b> (${s.m.l + s.m.r} px): fa <b>${Math.round(a.w)} px</b>. El Padding no canvia l'ample del botó: només separa el text de la vora.`;
+  } else {
+    f = `El botó «${a.txt}» fa <b>${a.w} × ${a.h} px</b>: el contingut (${a.cw} × ${TXT_ALT}) més el <b>Padding</b> (${s.p.l + s.p.r} px d'ample, ${s.p.t + s.p.b} px d'alt) més la vora. Amb el <b>Margin</b> ocupa <b>${a.w + s.m.l + s.m.r} × ${a.h + s.m.t + s.m.b} px</b> dins del contenidor.`;
+  }
+  f += ` Entre els dos botons hi ha <b>${s.m.r + s.m.l} px</b> (el Margin dret del primer més el Margin esquerre del segon).`;
+  const sortida = bs.some(b => b.x + b.w > CONT3.W);
+  if (sortida) f += `<span class="av">El segon botó no hi cap i es talla per la vora del contenidor.</span>`;
+  $('frase3').innerHTML = f;
+}
+document.querySelectorAll('#presets3 .p').forEach(b => b.addEventListener('click', () => {
+  const v = PRESETS3[b.dataset.p];
+  SEC3.m = { l: v.m, t: v.m, r: v.m, b: v.m }; SEC3.p = { l: v.p, t: v.p, r: v.p, b: v.p }; SEC3.uni = { m: true, p: true };
+  marcaPreset('presets3', b.dataset.p); pinta3();
+}));
+['m', 'p'].forEach(g => {
+  ['l', 't', 'r', 'b'].forEach(k => $(g + '3' + k).addEventListener('input', e => {
+    const v = +e.target.value;
+    if (SEC3.uni[g]) SEC3[g] = { l: v, t: v, r: v, b: v }; else SEC3[g][k] = v;
+    marcaPreset('presets3', null); pinta3();
+  }));
+  $(g + 'u3').addEventListener('input', e => { SEC3.uni[g] = e.target.checked; pinta3(); });
+});
+$('est3').addEventListener('input', e => { SEC3.estira = e.target.checked; pinta3(); });
+pinta3();
+
+preset1('esq-dalt'); marcaPreset('presets1', 'esq-dalt'); pinta1();
+preset2('form-llista'); marcaPreset('presets2', 'form-llista'); pinta2();
+
+/* ---------- Comprovacions internes (només amb ?prova) ---------- */
+if (location.search.includes('prova')) {
+  const r = []; const ok = (n, c) => r.push((c ? 'PASS ' : 'FAIL ') + n);
+  const W = 640;
+  let e = iniciEix(W, 90, 130, true, false);
+  ok('esquerra: pos fix en créixer', colloca(900, e).pos === 90 && colloca(900, e).mida === 130);
+  e = iniciEix(W, 420, 130, false, true);
+  ok('dreta: manté distància a la dreta', colloca(900, e).pos === 900 - e.d2 - 130 && e.d2 === 90);
+  e = iniciEix(W, 90, 300, true, true);
+  ok('dues vores: s\'estira', colloca(900, e).mida === 900 - 90 - e.d2 && colloca(900, e).mida > 300);
+  ok('mida mínima del control: no baixa de 100', colloca(250, e, 100).mida === 100 && colloca(250, e, 0).mida === 0 && colloca(900, e, 100).mida === 900 - 90 - e.d2);
+  let a = iniciEix(W, 90, 130, true, false), a0 = colloca(W, a);
+  let b = clica(W, a, 2); let b0 = colloca(W, b);
+  ok('clic dreta (lliure): dues vores i no es mou', b.a1 && b.a2 && b0.pos === a0.pos && b0.mida === a0.mida && b.d2 === W - 90 - 130);
+  let c2 = clica(W, b, 2);
+  ok('clic dreta (lligat, dos lligats): torna a només esquerra', c2.a1 && !c2.a2 && colloca(W, c2).mida === 130);
+  let d = clica(W, a, 1);
+  ok('clic únic lligat: salta a la dreta', !d.a1 && d.a2 && colloca(W, d).pos === a0.pos && d.d2 === W - 90 - 130);
+  // columnes i files
+  const am = reparteix(640, [F('fixa', 300), F('resta')], AUTO_COL);
+  ok('columna fixa 300 + resta 340', am[0] === 300 && am[1] === 340);
+  const am2 = reparteix(900, [F('fixa', 300), F('resta')], AUTO_COL);
+  ok('en créixer només creix la columna "resta"', am2[0] === 300 && am2[1] === 600);
+  const am3 = reparteix(600, [F('resta'), F('resta', 100, 2)], AUTO_COL);
+  ok('1× i 2× es reparteixen 1:2', am3[0] === 200 && am3[1] === 400);
+  const am4 = reparteix(640, [F('auto'), F('resta'), F('auto')], AUTO_COL);
+  ok('etiqueta + camp + botó', am4[0] === 90 && am4[2] === 90 && am4[1] === 460);
+  const fi = reparteix(300, [F('auto'), F('resta'), F('auto')], AUTO_FILA);
+  ok('files: títol, contingut i peu', fi[0] === 40 && fi[1] === 220 && fi[2] === 40);
+  // mida mínima de la finestra
+  const t = { W: 640, H: 300, minF: { on: false, w: 480, h: 240 } };
+  fixaMida(t, 200, 150); ok('sense mínim: la finestra pot ser petita', t.W === 200 && t.H === 150);
+  t.minF.on = true; fixaMida(t, 200, 150); ok('amb mínim: s\'atura a 480 × 240', t.W === 480 && t.H === 240);
+  // ---- clics reals sobre la pàgina ----
+  document.querySelector('#presets1 [data-p="esq-dalt"]').click();
+  let sims = document.querySelectorAll('#cli1 .simbol');
+  ok('hi ha 4 símbols', sims.length === 4);
+  sims[1].click();
+  ok('clic real: dues vores', SEC1.x.a1 && SEC1.x.a2 && /s'estira en amplada/.test($('frase1').textContent));
+  const wAntes = $('ctl1').offsetWidth;
+  const lw = $('w1'); lw.value = 900; lw.dispatchEvent(new Event('input'));
+  ok('lliscador: la finestra creix i el control s\'estira', SEC1.W === 900 && $('ctl1').offsetWidth > wAntes);
+  document.querySelectorAll('#cli1 .simbol')[1].click();
+  const ampleCongelat = $('ctl1').offsetWidth;
+  const lw2 = $('w1'); lw2.value = 500; lw2.dispatchEvent(new Event('input'));
+  ok('només esquerra: ja no canvia de mida', $('ctl1').offsetWidth === ampleCongelat && SEC1.x.a1 && !SEC1.x.a2);
+  document.querySelector('#presets1 [data-p="centre"]').click();
+  ok('centrat: cap vora lligada', !SEC1.x.a1 && !SEC1.x.a2 && !SEC1.y.a1 && !SEC1.y.a2);
+  // mínims a la secció 1 (control estirat)
+  document.querySelector('#presets1 [data-p="esq-dreta"]').click();
+  const sw = $('w1'); sw.value = 200; sw.dispatchEvent(new Event('input'));
+  ok('sense mínims: el control s\'ha encongit molt i avisa', $('ctl1').offsetWidth <= 4 + 2 && /desaparegut|talla/.test($('frase1').textContent));
+  const mc = $('mc1'); mc.checked = true; mc.dispatchEvent(new Event('input'));
+  const mcw = $('mcw1'); mcw.value = 100; mcw.dispatchEvent(new Event('input'));
+  ok('mínim del control: es queda a 100 px', $('ctl1').offsetWidth === 100 && /mida mínima/.test($('frase1').textContent));
+  const mf = $('mf1'); mf.checked = true; mf.dispatchEvent(new Event('input'));
+  ok('mínim de la finestra: la finestra puja a 480', SEC1.W === 480 && $('w1').min === '480');
+  // secció 2
+  document.querySelector('#presets2 [data-p="form-llista"]').click();
+  const w2 = $('w2'); w2.value = 900; w2.dispatchEvent(new Event('input'));
+  const cs = document.querySelectorAll('#quad .cel');
+  ok('columnes: fixa 300 i resta 600 a 900 px', cs[0].offsetWidth === 300 && Math.abs(cs[1].offsetWidth - 600) <= 2);
+  const sel = document.querySelector('#ordres .ordre select'); sel.value = 'resta'; sel.dispatchEvent(new Event('change'));
+  ok('canvi de tipus: dues columnes que es reparteixen', Math.abs(document.querySelectorAll('#quad .cel')[0].offsetWidth - 450) <= 2);
+  document.querySelector('#presets2 [data-p="titol-contingut-peu"]').click();
+  const cf = document.querySelectorAll('#quad .cel');
+  ok('«títol, contingut i peu»: mostra les files', SEC2.eix === 'files' && /Fila 1/.test($('ordres').textContent));
+  ok('files: 40 / 220 / 40 px', cf[0].offsetHeight === 40 && Math.abs(cf[2].offsetHeight - 220) <= 2 && cf[4].offsetHeight === 40);
+  const h2 = $('h2'); h2.value = 420; h2.dispatchEvent(new Event('input'));
+  const cf2 = document.querySelectorAll('#quad .cel');
+  ok('files: en créixer l\'alt només creix la del mig', cf2[0].offsetHeight === 40 && Math.abs(cf2[2].offsetHeight - 340) <= 2);
+  document.querySelector('#eix2 [data-e="cols"]').click();
+  ok('canvi a columnes', /Columna 1/.test($('ordres').textContent) && /Afegeix columna/.test($('afegeix2').textContent));
+  // secció 3: Margin i Padding
+  const s3 = { m: { l: 10, t: 10, r: 10, b: 10 }, p: { l: 8, t: 8, r: 8, b: 8 }, estira: false };
+  const k3 = capsa3(s3);
+  ok('botó 1: x = Margin, ample = contingut + Padding + vores', k3[0].x === 10 && k3[0].w === 50 + 16 + 4 && k3[0].h === 20 + 16 + 4);
+  ok('separació entre botons = Margin dret + Margin esquerre', k3[1].x - (k3[0].x + k3[0].w) === 20);
+  const k3e = capsa3({ ...s3, estira: true });
+  ok('estirats: ample = meitat − Margins', k3e[0].w === 280 - 20 && k3e[1].x === 280 + 10);
+  const k3p = capsa3({ ...s3, p: { l: 20, t: 8, r: 20, b: 8 }, estira: true });
+  ok('estirats: el Padding no canvia l\'ample', k3p[0].w === k3e[0].w);
+  document.querySelector('#presets3 [data-p="cap"]').click();
+  ok('«Sense espais»: botons enganxats', document.querySelectorAll('#cont3 .btn3').length === 2 && document.querySelector('#cont3 .btn3').offsetLeft === 0);
+  const sl = $('m3l'); sl.value = 30; sl.dispatchEvent(new Event('input'));
+  ok('lliscador de Margin (costats iguals): el botó es mou', document.querySelector('#cont3 .btn3').offsetLeft === 30 && SEC3.m.t === 30);
+  const pu = $('pu3'); pu.checked = false; pu.dispatchEvent(new Event('input'));
+  const pl = $('p3l'); pl.value = 24; pl.dispatchEvent(new Event('input'));
+  ok('Padding només a l\'esquerra: el botó s\'eixampla 24 px', SEC3.p.l === 24 && SEC3.p.r === 0 && document.querySelector('#cont3 .btn3').offsetWidth === 50 + 24 + 4);
+  $('prova').textContent = r.join('\n');
+  document.title = r.some(x => x.startsWith('FAIL')) ? 'PROVA-KO' : 'PROVA-OK';
+}
+</script>
+</body>
+</html>
